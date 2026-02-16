@@ -95,6 +95,10 @@ footer {
   gap: 1.2rem;
 }
 
+.menu .menu-right-start {
+  margin-left: auto;
+}
+
 .menu a {
   color: var(--ink);
   text-decoration: none;
@@ -1253,6 +1257,10 @@ footer {
   .menu {
     flex-wrap: wrap;
     gap: 0.75rem;
+  }
+
+  .menu .menu-right-start {
+    margin-left: 0;
   }
 
   .hero {
