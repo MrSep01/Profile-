@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="My Teaching Journey Scavenger Hunt: 10 activity types by Sepehr Massoumi Alamouti."
+    />
+    <title>My Teaching Journey Scavenger Hunt | Sepehr Massoumi Alamouti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css?v=20260216a" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="Home">SA</a>
+      <nav aria-label="Main">
+        <ul class="menu">
+          <li><a href="index.html">Home</a></li>
+          <li><a class="active" href="portfolio.html">Portfolio</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="subpage-banner reveal">
+        <div>
+          <p class="eyebrow">Interactive Portfolio Concept</p>
+          <h1>My Teaching Journey Scavenger Hunt</h1>
+          <p class="subtitle">
+            A guided walkthrough of ten activity types that represent how I
+            plan, teach, assess, and mentor in science classrooms.
+          </p>
+        </div>
+        <div class="subpage-banner-media" aria-label="Scavenger hunt banner">
+          <p class="subpage-banner-label">Banner Placeholder</p>
+          <p class="subpage-banner-note">
+            Add a visual journey map, station collage, or class highlight
+            banner here.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel reveal">
+        <div class="tile-slider" data-slider>
+          <div class="tile-slider-head">
+            <h2>10 Activity Stations</h2>
+            <div class="tile-slider-controls">
+              <button
+                class="tile-control"
+                type="button"
+                data-slider-prev
+                aria-label="Previous station"
+              >
+                Previous
+              </button>
+              <button
+                class="tile-control"
+                type="button"
+                data-slider-next
+                aria-label="Next station"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+          <p class="muted">
+            Use arrows, trackpad, or swipe to move through each station.
+          </p>
+          <div class="scavenger-game" data-scavenger-game>
+            <div class="scavenger-meta">
+              <p class="scavenger-progress-text" data-progress-text>
+                0 / 10 stations completed
+              </p>
+              <p class="scavenger-badge" data-progress-badge>
+                Badge: Starter Chemist
+              </p>
+              <button
+                class="tile-control scavenger-reset"
+                type="button"
+                data-progress-reset
+              >
+                Reset Progress
+              </button>
+            </div>
+            <div class="scavenger-progress-bar" aria-hidden="true">
+              <div class="scavenger-progress-fill" data-progress-fill></div>
+            </div>
+          </div>
+          <div
+            class="tile-slider-track"
+            data-slider-track
+            tabindex="0"
+            aria-label="Scavenger hunt activity stations"
+          >
+            <article class="hunt-card">
+            <p class="hunt-number">1</p>
+            <h3>Concept Hook Challenge</h3>
+            <p>Short prompts that trigger curiosity before new content starts.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="0" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">2</p>
+            <h3>Lab Safety Detective</h3>
+            <p>Students identify risks and design safe operating procedures.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="1" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">3</p>
+            <h3>Inquiry Investigation Sprint</h3>
+            <p>Teams build hypotheses, variables, and method plans quickly.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="2" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">4</p>
+            <h3>Data Story Workshop</h3>
+            <p>Students convert raw data into claims with evidence.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="3" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">5</p>
+            <h3>CER Argument Round</h3>
+            <p>Claim-Evidence-Reasoning discussions with peer critique rules.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="4" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">6</p>
+            <h3>Misconception Clinic</h3>
+            <p>Targeted correction of common chemistry misunderstandings.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="5" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">7</p>
+            <h3>Exam Strategy Lab</h3>
+            <p>Past-paper method practice for timing and precision.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="6" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">8</p>
+            <h3>Feedback & Revision Loop</h3>
+            <p>Students revise work using structured next-step feedback.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="7" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">9</p>
+            <h3>Differentiation Choice Board</h3>
+            <p>Multiple pathways for support, challenge, and extension.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="8" />
+              Mark station complete
+            </label>
+          </article>
+          <article class="hunt-card">
+            <p class="hunt-number">10</p>
+            <h3>Reflection & Goal Setting</h3>
+            <p>Students document growth and define goals for next lessons.</p>
+            <label class="station-check">
+              <input type="checkbox" data-station-check="9" />
+              Mark station complete
+            </label>
+          </article>
+          </div>
+          <div class="tile-slider-footer">
+            <p class="tile-slider-status" data-slider-status>Station 1 of 10</p>
+            <div class="tile-slider-dots" data-slider-dots aria-label="Station picker">
+              <button class="tile-dot active" type="button" data-slider-dot="0" aria-label="Go to station 1"></button>
+              <button class="tile-dot" type="button" data-slider-dot="1" aria-label="Go to station 2"></button>
+              <button class="tile-dot" type="button" data-slider-dot="2" aria-label="Go to station 3"></button>
+              <button class="tile-dot" type="button" data-slider-dot="3" aria-label="Go to station 4"></button>
+              <button class="tile-dot" type="button" data-slider-dot="4" aria-label="Go to station 5"></button>
+              <button class="tile-dot" type="button" data-slider-dot="5" aria-label="Go to station 6"></button>
+              <button class="tile-dot" type="button" data-slider-dot="6" aria-label="Go to station 7"></button>
+              <button class="tile-dot" type="button" data-slider-dot="7" aria-label="Go to station 8"></button>
+              <button class="tile-dot" type="button" data-slider-dot="8" aria-label="Go to station 9"></button>
+              <button class="tile-dot" type="button" data-slider-dot="9" aria-label="Go to station 10"></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel reveal">
+        <h2>How I Use This Page</h2>
+        <div class="link-grid">
+          <article class="resource-card">
+            <h3>For Interviews</h3>
+            <p>
+              A fast, visual way to explain my classroom style beyond a
+              traditional CV.
+            </p>
+          </article>
+          <article class="resource-card">
+            <h3>For School Leaders</h3>
+            <p>
+              Shows concrete activity types aligned with curriculum, assessment,
+              and wellbeing priorities.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        <a class="footer-link" href="index.html">Back to main profile</a>
+      </p>
+    </footer>
+  </body>
+</html>
