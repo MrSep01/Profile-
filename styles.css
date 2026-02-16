@@ -1538,11 +1538,57 @@ form,
   border-radius: 0;
   background: #ffffff;
   min-height: 170px;
-  display: grid;
-  place-items: center;
+  display: block;
   text-align: center;
-  padding: 1.2rem;
+  padding: 0;
   box-shadow: none;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.page-banner .subpage-banner-media p {
+  display: none;
+}
+
+.page-banner .subpage-banner-media[aria-label="Blog hub banner"] {
+  background-image: url("assets/banners/blog-hub.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Chemistry category banner"],
+.page-banner .subpage-banner-media[aria-label="Chemistry post banner"],
+.page-banner .subpage-banner-media[aria-label="Teaching activities banner"] {
+  background-image: url("assets/banners/chemistry.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Leadership category banner"],
+.page-banner .subpage-banner-media[aria-label="Leadership post banner"] {
+  background-image: url("assets/banners/leadership.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Moreland category banner"],
+.page-banner .subpage-banner-media[aria-label="Moreland post banner"] {
+  background-image: url("assets/banners/moreland.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Portfolio banner"] {
+  background-image: url("assets/banners/portfolio.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Post banner"] {
+  background-image: url("assets/banners/post-generic.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Scavenger hunt banner"] {
+  background-image: url("assets/banners/scavenger.svg");
+}
+
+.page-banner .subpage-banner-media[aria-label="Video 1 banner area"],
+.page-banner .subpage-banner-media[aria-label="Video 2 banner area"],
+.page-banner .subpage-banner-media[aria-label="Video 3 banner area"],
+.page-banner .subpage-banner-media[aria-label="Video 4 banner area"] {
+  background-image: url("assets/banners/video-series.svg");
 }
 
 .subject-card:hover,

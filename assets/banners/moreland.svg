@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" role="img" aria-label="Moreland category banner abstract design">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f4f4f4" />
+    </linearGradient>
+    <linearGradient id="redBand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ee0000" />
+      <stop offset="1" stop-color="#7a0000" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="560" fill="url(#bg)" />
+  <path d="M0 560 L0 260 L700 120 L1020 230 L430 560 Z" fill="#151515" opacity="0.08" />
+  <path d="M330 560 L960 60 L1600 210 L1600 560 Z" fill="url(#redBand)" opacity="0.94" />
+  <rect x="110" y="80" width="560" height="310" fill="#ffffff" opacity="0.84" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="156" y="132" width="470" height="10" fill="#a30000" opacity="0.34" />
+  <rect x="156" y="172" width="420" height="10" fill="#4f5255" opacity="0.26" />
+  <rect x="156" y="212" width="360" height="10" fill="#4f5255" opacity="0.26" />
+  <rect x="156" y="252" width="460" height="10" fill="#4f5255" opacity="0.26" />
+</svg>

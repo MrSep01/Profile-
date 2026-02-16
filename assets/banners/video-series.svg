@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" role="img" aria-label="Video series banner abstract design">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f4f4f4" />
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#151515" />
+      <stop offset="1" stop-color="#ee0000" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="560" fill="url(#bg)" />
+  <path d="M0 560 L560 150 L970 240 L600 560 Z" fill="#151515" opacity="0.08" />
+  <path d="M430 560 L980 90 L1600 240 L1600 560 Z" fill="url(#band)" opacity="0.9" />
+  <g fill="#ffffff" opacity="0.95" stroke="#d2d2d2" stroke-width="2">
+    <rect x="145" y="98" width="290" height="164" rx="12" ry="12" />
+    <rect x="465" y="98" width="290" height="164" rx="12" ry="12" />
+    <rect x="785" y="98" width="290" height="164" rx="12" ry="12" />
+  </g>
+  <g fill="#ee0000" opacity="0.85">
+    <polygon points="250,145 250,214 314,179" />
+    <polygon points="570,145 570,214 634,179" />
+    <polygon points="890,145 890,214 954,179" />
+  </g>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" role="img" aria-label="Blog post banner abstract design">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f6f6f6" />
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ee0000" />
+      <stop offset="1" stop-color="#151515" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="560" fill="url(#bg)" />
+  <path d="M0 560 L0 230 L640 130 L1010 260 L580 560 Z" fill="#151515" opacity="0.08" />
+  <path d="M420 560 L980 90 L1600 230 L1600 560 Z" fill="url(#band)" opacity="0.9" />
+  <rect x="120" y="90" width="740" height="360" fill="#ffffff" opacity="0.88" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="168" y="140" width="560" height="12" fill="#ee0000" opacity="0.33" />
+  <rect x="168" y="184" width="632" height="10" fill="#4f5255" opacity="0.25" />
+  <rect x="168" y="222" width="632" height="10" fill="#4f5255" opacity="0.25" />
+  <rect x="168" y="260" width="632" height="10" fill="#4f5255" opacity="0.25" />
+  <rect x="168" y="298" width="520" height="10" fill="#4f5255" opacity="0.25" />
+</svg>

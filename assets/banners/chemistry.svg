@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" role="img" aria-label="Chemistry banner abstract design">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f6f6f6" />
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#151515" />
+      <stop offset="1" stop-color="#ee0000" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="560" fill="url(#bg)" />
+  <path d="M0 560 L520 160 L880 260 L520 560 Z" fill="#151515" opacity="0.08" />
+  <path d="M430 560 L980 120 L1600 250 L1600 560 Z" fill="url(#band)" opacity="0.9" />
+  <circle cx="1110" cy="160" r="66" fill="#74a8d6" opacity="0.95" />
+  <circle cx="1210" cy="255" r="52" fill="#76b594" opacity="0.92" />
+  <circle cx="1320" cy="185" r="48" fill="#d5c290" opacity="0.92" />
+  <circle cx="1410" cy="265" r="42" fill="#9a8cc6" opacity="0.92" />
+  <circle cx="1260" cy="110" r="34" fill="#c08faf" opacity="0.9" />
+  <line x1="1110" y1="160" x2="1210" y2="255" stroke="#ffffff" stroke-width="5" opacity="0.65" />
+  <line x1="1210" y1="255" x2="1320" y2="185" stroke="#ffffff" stroke-width="5" opacity="0.65" />
+  <line x1="1320" y1="185" x2="1410" y2="265" stroke="#ffffff" stroke-width="5" opacity="0.65" />
+</svg>

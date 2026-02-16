@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 560" role="img" aria-label="Portfolio banner abstract design">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f7f7f7" />
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#151515" />
+      <stop offset="1" stop-color="#ee0000" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="560" fill="url(#bg)" />
+  <path d="M0 560 L590 120 L980 230 L610 560 Z" fill="#151515" opacity="0.08" />
+  <path d="M470 560 L1000 90 L1600 250 L1600 560 Z" fill="url(#band)" opacity="0.9" />
+  <rect x="125" y="96" width="210" height="136" fill="#ffffff" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="365" y="96" width="210" height="136" fill="#ffffff" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="605" y="96" width="210" height="136" fill="#ffffff" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="125" y="262" width="330" height="188" fill="#ffffff" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="485" y="262" width="330" height="188" fill="#ffffff" stroke="#d2d2d2" stroke-width="2" />
+  <rect x="164" y="136" width="120" height="8" fill="#ee0000" opacity="0.34" />
+  <rect x="404" y="136" width="120" height="8" fill="#ee0000" opacity="0.34" />
+  <rect x="644" y="136" width="120" height="8" fill="#ee0000" opacity="0.34" />
+</svg>
