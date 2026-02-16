@@ -1503,21 +1503,44 @@ form,
 }
 
 .subpage-banner {
-  margin-top: 1.5rem;
-  padding: 2rem;
+  margin-top: 0;
+  padding: 0;
   gap: 1.5rem;
-  border-left: 6px solid var(--accent);
-  background: #f5f5f5;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .subpage-banner > div:first-child {
   padding: 0;
 }
 
-.subpage-banner-media {
-  border: 1px dashed #8a8d90;
-  border-radius: 0.2rem;
+.page-banner {
+  margin: 0 0 1.9rem;
+  padding: 2.35rem 0;
+  background: #f5f5f5;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.page-banner .subpage-banner {
+  width: min(1200px, 94vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.page-banner .subpage-banner-media {
+  border: 1px solid var(--line);
+  border-radius: 0;
   background: #ffffff;
+  min-height: 170px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 1.2rem;
   box-shadow: none;
 }
 
@@ -1643,9 +1666,17 @@ footer {
     padding: 0.85rem 1rem;
   }
 
-  .subpage-banner {
+  .page-banner {
+    padding: 1.8rem 0;
+  }
+
+  .page-banner .subpage-banner {
     grid-template-columns: 1fr;
-    padding: 1.5rem;
+    width: min(1200px, 94vw);
+  }
+
+  .page-banner .subpage-banner-media {
+    min-height: 130px;
   }
 
   .hero-card img {
