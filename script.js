@@ -2,43 +2,53 @@ document.documentElement.classList.add("js");
 
 const revealElements = document.querySelectorAll(".reveal");
 
-const revealObserver = new IntersectionObserver(
-  (entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.15 }
-);
+const showAllReveal = () => {
+  revealElements.forEach((element) => element.classList.add("show"));
+};
 
-revealElements.forEach((element) => revealObserver.observe(element));
+if ("IntersectionObserver" in window) {
+  const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  revealElements.forEach((element) => revealObserver.observe(element));
+} else {
+  showAllReveal();
+}
 
 const menuLinks = document.querySelectorAll('.menu a[href^="#"]');
 const observedSections = [...menuLinks]
   .map((link) => document.querySelector(link.getAttribute("href")))
   .filter(Boolean);
 
-const navObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      const sectionId = entry.target.id;
-      menuLinks.forEach((link) => {
-        const isMatch = link.getAttribute("href") === `#${sectionId}`;
-        link.classList.toggle("active", isMatch);
+if ("IntersectionObserver" in window && observedSections.length) {
+  const navObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const sectionId = entry.target.id;
+        menuLinks.forEach((link) => {
+          const isMatch = link.getAttribute("href") === `#${sectionId}`;
+          link.classList.toggle("active", isMatch);
+        });
       });
-    });
-  },
-  {
-    rootMargin: "-35% 0px -55% 0px",
-    threshold: 0
-  }
-);
+    },
+    {
+      rootMargin: "-35% 0px -55% 0px",
+      threshold: 0
+    }
+  );
 
-observedSections.forEach((section) => navObserver.observe(section));
+  observedSections.forEach((section) => navObserver.observe(section));
+}
 
 const contactForm = document.querySelector("form");
 

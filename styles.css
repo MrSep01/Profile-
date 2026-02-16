@@ -1180,6 +1180,12 @@ footer {
   transform: translateY(0);
 }
 
+/* Keep long-form blog content visible even if reveal observers fail. */
+.js .blog-post.reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 @media (max-width: 930px) {
   .hero,
   .contact,
