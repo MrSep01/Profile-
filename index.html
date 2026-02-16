@@ -14,8 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260216i" />
-    <script src="script.js?v=20260216i" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260216j" />
+    <script src="script.js?v=20260216j" defer></script>
   </head>
   <body>
     <div class="grain" aria-hidden="true"></div>
@@ -414,20 +414,33 @@
             >
           </div>
         </div>
-        <form>
+        <form
+          id="contact-form"
+          data-contact-form
+          action="https://formspree.io/f/your-form-id"
+          method="POST"
+        >
+          <input type="hidden" name="_subject" value="New website inquiry from profile site" />
+          <input type="text" name="_gotcha" class="hp-field" tabindex="-1" autocomplete="off" />
           <label>
             Name
-            <input type="text" placeholder="Your name" required />
+            <input type="text" name="name" placeholder="Your name" required />
           </label>
           <label>
             Email
-            <input type="email" placeholder="you@example.com" required />
+            <input type="email" name="email" placeholder="you@example.com" required />
           </label>
           <label>
             Message
-            <textarea rows="4" placeholder="How can Sepehr help?"></textarea>
+            <textarea
+              rows="4"
+              name="message"
+              placeholder="How can Sepehr help?"
+              required
+            ></textarea>
           </label>
           <button type="submit" class="btn btn-primary">Send Message</button>
+          <p class="form-status" data-form-status aria-live="polite"></p>
         </form>
       </section>
     </main>

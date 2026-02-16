@@ -50,23 +50,66 @@ if ("IntersectionObserver" in window && observedSections.length) {
   observedSections.forEach((section) => navObserver.observe(section));
 }
 
-const contactForm = document.querySelector("form");
+const contactForm = document.querySelector("[data-contact-form]");
 
 if (contactForm) {
-  contactForm.addEventListener("submit", (event) => {
+  const submitButton = contactForm.querySelector("button[type='submit']");
+  const statusMessage = contactForm.querySelector("[data-form-status]");
+
+  const setFormStatus = (message, state) => {
+    if (!statusMessage) return;
+    statusMessage.textContent = message;
+    statusMessage.setAttribute("data-state", state);
+  };
+
+  contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    const button = contactForm.querySelector("button");
-    if (!button) return;
+    if (!submitButton) return;
 
-    const originalButtonText = button.textContent;
-    button.textContent = "Message Sent";
-    button.disabled = true;
+    const action = (contactForm.getAttribute("action") || "").trim();
+    if (!action || action.includes("your-form-id")) {
+      setFormStatus(
+        "Form is not configured yet. Replace `your-form-id` with your Formspree form ID.",
+        "error"
+      );
+      return;
+    }
 
-    setTimeout(() => {
-      button.textContent = originalButtonText;
-      button.disabled = false;
-      contactForm.reset();
-    }, 1800);
+    const originalButtonText = submitButton.textContent;
+    submitButton.textContent = "Sending...";
+    submitButton.disabled = true;
+    setFormStatus("Sending your message...", "pending");
+
+    try {
+      const response = await fetch(action, {
+        method: "POST",
+        body: new FormData(contactForm),
+        headers: {
+          Accept: "application/json"
+        }
+      });
+
+      if (response.ok) {
+        setFormStatus("Message sent successfully. I will get back to you soon.", "success");
+        contactForm.reset();
+      } else {
+        let errorMessage = "Unable to send your message right now. Please try again.";
+        try {
+          const payload = await response.json();
+          if (payload?.errors?.length) {
+            errorMessage = payload.errors.map((error) => error.message).join(" ");
+          }
+        } catch {
+          // Keep default message if response has no JSON body.
+        }
+        setFormStatus(errorMessage, "error");
+      }
+    } catch {
+      setFormStatus("Network error. Please check your connection and try again.", "error");
+    } finally {
+      submitButton.textContent = originalButtonText;
+      submitButton.disabled = false;
+    }
   });
 }
 

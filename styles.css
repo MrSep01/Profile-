@@ -1651,6 +1651,35 @@ textarea:focus {
   border-color: var(--accent);
 }
 
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.form-status {
+  min-height: 1.2rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.form-status[data-state="pending"] {
+  color: #4f5255;
+}
+
+.form-status[data-state="success"] {
+  color: #2e7d32;
+}
+
+.form-status[data-state="error"] {
+  color: #c9190b;
+}
+
 footer {
   width: 100%;
   margin-top: 3rem;
