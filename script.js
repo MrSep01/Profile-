@@ -260,11 +260,11 @@ if (scavengerGame) {
   const progressReset = scavengerGame.querySelector("[data-progress-reset]");
 
   const getBadgeLabel = (completed, total) => {
-    if (completed === total) return "Badge: Master Teacher Explorer";
-    if (completed >= Math.ceil(total * 0.75)) return "Badge: Advanced Strategy Guide";
-    if (completed >= Math.ceil(total * 0.5)) return "Badge: Inquiry Navigator";
-    if (completed >= Math.ceil(total * 0.25)) return "Badge: Active Investigator";
-    return "Badge: Starter Chemist";
+    if (completed === total) return "Badge: Standard 9 Completer";
+    if (completed >= Math.ceil(total * 0.75)) return "Badge: Portfolio Finisher";
+    if (completed >= Math.ceil(total * 0.5)) return "Badge: PLN Builder";
+    if (completed >= Math.ceil(total * 0.25)) return "Badge: Reflective Practitioner";
+    return "Badge: Standard 9 Explorer";
   };
 
   const persistProgress = () => {

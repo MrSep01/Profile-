@@ -957,7 +957,33 @@ section {
   margin-bottom: 0.4rem;
 }
 
-.hunt-card p:last-child {
+.hunt-card p {
+  margin: 0;
+}
+
+.hunt-card > p + p {
+  margin-top: 0.45rem;
+}
+
+.hunt-meta {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hunt-actions {
+  margin-top: 0.65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hunt-actions .btn {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.84rem;
+}
+
+.hunt-card p:last-of-type {
   margin: 0;
   color: var(--muted);
 }
