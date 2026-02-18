@@ -407,11 +407,17 @@ if (
 
   const detailStack = document.createElement("div");
   detailStack.className = "detail-content-stack";
+  const detailPrimary = document.createElement("div");
+  detailPrimary.className = "detail-primary";
+  const detailRail = document.createElement("aside");
+  detailRail.className = "detail-rail";
+  detailRail.setAttribute("aria-label", "Page navigation");
   while (engagementRoot.firstChild) {
-    detailStack.appendChild(engagementRoot.firstChild);
+    detailPrimary.appendChild(engagementRoot.firstChild);
   }
+  detailStack.append(detailPrimary, detailRail);
   engagementRoot.appendChild(detailStack);
-  const contentHost = detailStack;
+  const contentHost = detailPrimary;
 
   const createShareSection = (position) => {
     const section = document.createElement("section");
@@ -639,6 +645,11 @@ if (
           .join("")}
       </ol>
     `;
+
+    if (isBlogPostPage && detailRail) {
+      detailRail.appendChild(toc);
+      return;
+    }
 
     if (shareSection.nextSibling) {
       firstPanel.insertBefore(toc, shareSection.nextSibling);
