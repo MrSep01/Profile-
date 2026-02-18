@@ -339,20 +339,32 @@ const getPageFilename = () => {
 
 const shouldEnableEngagement = () => {
   const filename = getPageFilename();
-  if (filename === "index.html") return false;
+  if (
+    filename === "index.html" ||
+    filename === "blog.html" ||
+    filename === "portfolio.html" ||
+    filename === "teaching-activities.html" ||
+    filename === "teaching-journey-scavenger-hunt.html"
+  ) {
+    return false;
+  }
 
-  return (
-    filename.startsWith("blog") ||
-    filename.includes("scavenger") ||
-    filename.startsWith("portfolio") ||
-    filename.startsWith("intasc-video") ||
-    filename.startsWith("teaching-activities")
-  );
+  const isBlogCategory = filename.startsWith("blog-category-");
+  const isBlogPost = filename.startsWith("blog-") && !isBlogCategory;
+  const isScavengerDetail = filename.startsWith("scavenger-");
+  const isVideoDetail = filename.startsWith("intasc-video-");
+  const isPortfolioDetail = filename.startsWith("portfolio-");
+
+  return isBlogPost || isScavengerDetail || isVideoDetail || isPortfolioDetail;
 };
 
 const engagementRoot = document.querySelector("main");
 
-if (engagementRoot && shouldEnableEngagement()) {
+if (
+  engagementRoot &&
+  shouldEnableEngagement() &&
+  !engagementRoot.querySelector("[data-engagement='true']")
+) {
   const pageSlug = getPageFilename();
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sepehr Massoumi Alamouti";
