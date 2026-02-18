@@ -628,9 +628,20 @@ section {
   margin-top: 0.2rem;
 }
 
+#certifications .credential-title {
+  color: var(--ink);
+  font-weight: 700;
+}
+
 #certifications .credential-inline-accent {
   color: var(--accent);
   font-weight: 700;
+  white-space: nowrap;
+}
+
+#certifications .credential-inline-meta {
+  color: var(--muted);
+  font-weight: 600;
   white-space: nowrap;
 }
 
