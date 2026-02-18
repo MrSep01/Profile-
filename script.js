@@ -463,6 +463,7 @@ if (
   } else {
     contentHost.appendChild(shareSection);
   }
+  const shareBottomSection = createShareSection("bottom");
 
   const buildShareLink = (platform) => {
     const url = encodeURIComponent(pageUrl);
@@ -531,6 +532,7 @@ if (
   };
 
   attachShareHandlers(shareSection);
+  attachShareHandlers(shareBottomSection);
 
   const estimateReadMinutes = (node) => {
     const text = String(node?.textContent || "")
@@ -926,6 +928,7 @@ if (
     </div>
   `;
 
+  contentHost.appendChild(shareBottomSection);
   contentHost.appendChild(engagementSection);
 
   const likeButton = engagementSection.querySelector("[data-like-button]");

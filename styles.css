@@ -869,6 +869,24 @@ body.detail-page-blog .post-figure {
   margin: 0 0 0.9rem;
 }
 
+.share-panel-bottom {
+  width: 100%;
+  margin: 1.4rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+  justify-content: flex-start;
+  margin-left: 0;
+}
+
+.share-panel-bottom .share-actions-icons {
+  justify-content: flex-start;
+}
+
+.share-panel-bottom .share-feedback {
+  width: 100%;
+  white-space: normal;
+}
+
 .share-head {
   display: none;
 }
