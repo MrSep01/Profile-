@@ -366,6 +366,11 @@ if (
   !engagementRoot.querySelector("[data-engagement='true']")
 ) {
   const pageSlug = getPageFilename();
+  const isBlogPostPage = pageSlug.startsWith("blog-") && !pageSlug.startsWith("blog-category-");
+  const isPortfolioContentPage =
+    pageSlug.startsWith("scavenger-") ||
+    pageSlug.startsWith("intasc-video-") ||
+    pageSlug.startsWith("portfolio-");
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sepehr Massoumi Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
@@ -396,21 +401,44 @@ if (
   let turnstileWidgetId = null;
   let turnstileToken = "";
 
+  document.body.classList.add("detail-page");
+  if (isBlogPostPage) document.body.classList.add("detail-page-blog");
+  if (isPortfolioContentPage) document.body.classList.add("detail-page-portfolio");
+
+  const detailStack = document.createElement("div");
+  detailStack.className = "detail-content-stack";
+  while (engagementRoot.firstChild) {
+    detailStack.appendChild(engagementRoot.firstChild);
+  }
+  engagementRoot.appendChild(detailStack);
+  const contentHost = detailStack;
+
   const createShareSection = (position) => {
     const section = document.createElement("section");
     section.className = `panel reveal share-panel share-panel-${position}`;
     section.innerHTML = `
       <div class="share-head">
-        <h2>Share This Page</h2>
-        <p>Share this page with your network.</p>
+        <p class="share-kicker">Share</p>
       </div>
-      <div class="share-actions">
-        <button type="button" class="btn btn-secondary share-btn" data-share="linkedin">LinkedIn</button>
-        <button type="button" class="btn btn-secondary share-btn" data-share="x">X</button>
-        <button type="button" class="btn btn-secondary share-btn" data-share="facebook">Facebook</button>
-        <button type="button" class="btn btn-secondary share-btn" data-share="whatsapp">WhatsApp</button>
-        <button type="button" class="btn btn-secondary share-btn" data-share="email">Email</button>
-        <button type="button" class="btn btn-secondary share-btn" data-share="copy">Copy Link</button>
+      <div class="share-actions share-actions-icons">
+        <button type="button" class="share-icon-btn" data-share="linkedin" title="LinkedIn" aria-label="Share on LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.86 6 2.49 6S0 4.88 0 3.5 1.12 1 2.49 1s2.49 1.12 2.49 2.5zM.5 8h4V23h-4V8zm7 0h3.8v2.05h.05C11.88 8.98 13.3 8 15.4 8 19.5 8 20 10.7 20 14.2V23h-4v-7.7c0-1.84-.03-4.2-2.56-4.2-2.57 0-2.96 2.01-2.96 4.07V23h-4V8z"/></svg>
+        </button>
+        <button type="button" class="share-icon-btn" data-share="x" title="X" aria-label="Share on X">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2H21l-6.6 7.54L22.2 22h-6.1l-4.78-6.28L5.8 22H3l7.08-8.1L2 2h6.26l4.32 5.71L18.24 2zm-.98 18h1.55L7.42 3.9H5.76L17.26 20z"/></svg>
+        </button>
+        <button type="button" class="share-icon-btn" data-share="facebook" title="Facebook" aria-label="Share on Facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 8H16V5h-2.5C10.46 5 9 6.79 9 9.5V12H7v3h2v7h3v-7h3l1-3h-4v-2.5c0-.82.18-1.5 1.5-1.5z"/></svg>
+        </button>
+        <button type="button" class="share-icon-btn" data-share="whatsapp" title="WhatsApp" aria-label="Share on WhatsApp">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.52 3.49A11.84 11.84 0 0 0 12.07 0C5.48 0 .11 5.37.11 11.97c0 2.1.55 4.16 1.6 5.99L0 24l6.2-1.63a11.95 11.95 0 0 0 5.87 1.5h.01c6.59 0 11.96-5.37 11.96-11.97 0-3.2-1.25-6.2-3.52-8.41zM12.08 21.8h-.01a9.9 9.9 0 0 1-5.04-1.38l-.36-.21-3.68.97.98-3.58-.23-.37a9.92 9.92 0 0 1-1.53-5.26c0-5.48 4.46-9.94 9.95-9.94a9.86 9.86 0 0 1 7.03 2.9 9.84 9.84 0 0 1 2.9 7.03c0 5.48-4.46 9.94-9.94 9.94zm5.45-7.42c-.3-.15-1.78-.88-2.06-.98-.28-.1-.48-.15-.69.15-.2.3-.79.98-.96 1.18-.18.2-.35.23-.65.08-.3-.15-1.24-.46-2.37-1.48-.88-.78-1.48-1.74-1.65-2.04-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.08-.15-.69-1.65-.94-2.26-.25-.6-.5-.52-.69-.53h-.59c-.2 0-.53.08-.8.38-.28.3-1.05 1.03-1.05 2.5s1.08 2.88 1.23 3.08c.15.2 2.12 3.24 5.13 4.54.72.31 1.29.5 1.73.64.73.23 1.39.2 1.91.12.58-.09 1.78-.73 2.03-1.43.25-.71.25-1.31.18-1.43-.08-.12-.28-.2-.58-.35z"/></svg>
+        </button>
+        <button type="button" class="share-icon-btn" data-share="email" title="Email" aria-label="Share by Email">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 5h20v14H2V5zm2 2v.2l8 5.3 8-5.3V7l-8 5.3L4 7z"/></svg>
+        </button>
+        <button type="button" class="share-icon-btn" data-share="copy" title="Copy Link" aria-label="Copy page link">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12a5 5 0 0 1 5-5h3v2h-3a3 3 0 1 0 0 6h3v2h-3a5 5 0 0 1-5-5zm6.1 1h4v-2h-4v2zm5.1-6h-3v2h3a3 3 0 1 1 0 6h-3v2h3a5 5 0 1 0 0-10z"/></svg>
+        </button>
       </div>
       <p class="share-feedback" data-share-feedback aria-live="polite"></p>
     `;
@@ -418,11 +446,11 @@ if (
   };
 
   const shareSection = createShareSection("top");
-  const firstPanel = engagementRoot.querySelector("section.panel");
+  const firstPanel = contentHost.querySelector("section.panel");
   if (firstPanel) {
-    engagementRoot.insertBefore(shareSection, firstPanel);
+    contentHost.insertBefore(shareSection, firstPanel);
   } else {
-    engagementRoot.appendChild(shareSection);
+    contentHost.appendChild(shareSection);
   }
 
   const buildShareLink = (platform) => {
@@ -633,7 +661,7 @@ if (
     </div>
   `;
 
-  engagementRoot.appendChild(engagementSection);
+  contentHost.appendChild(engagementSection);
 
   const likeButton = engagementSection.querySelector("[data-like-button]");
   const likeCount = engagementSection.querySelector("[data-like-count]");

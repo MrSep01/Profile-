@@ -774,46 +774,107 @@ section {
   margin-top: 1.4rem;
 }
 
-.share-panel {
+body.detail-page main {
+  width: min(1120px, 94vw);
+}
+
+body.detail-page .detail-content-stack {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+body.detail-page .detail-content-stack > .panel {
   margin-top: 1rem;
 }
 
-.share-panel-top {
+body.detail-page-blog .blog-post {
+  border: 0;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+}
+
+body.detail-page-blog .blog-post p,
+body.detail-page-blog .blog-post li {
+  line-height: 1.85;
+  font-size: 1.03rem;
+}
+
+body.detail-page-blog .blog-post h2 {
+  margin-top: 2.1rem;
+}
+
+body.detail-page-blog .post-figure {
+  margin: 1.4rem 0;
+}
+
+.share-panel {
   margin-top: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.share-panel-top {
+  margin-bottom: 0.65rem;
 }
 
 .share-head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.9rem;
-  align-items: baseline;
+  display: block;
 }
 
-.share-head h2 {
-  margin: 0;
-}
-
-.share-head p {
+.share-kicker {
   margin: 0;
   color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .share-actions {
-  margin-top: 0.9rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  margin-top: 0.55rem;
 }
 
-.share-btn {
-  min-width: 8rem;
+.share-actions-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.share-icon-btn {
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  background: #ffffff;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 170ms ease, color 170ms ease, background-color 170ms ease;
+}
+
+.share-icon-btn svg {
+  width: 1.02rem;
+  height: 1.02rem;
+  fill: currentColor;
+}
+
+.share-icon-btn:hover,
+.share-icon-btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
 }
 
 .share-feedback {
   min-height: 1.2rem;
-  margin: 0.65rem 0 0;
+  margin: 0.5rem 0 0;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.83rem;
 }
 
 .engagement-controls {
@@ -1607,9 +1668,13 @@ footer {
     align-items: stretch;
   }
 
-  .share-actions .share-btn {
-    min-width: 0;
-    flex: 1 1 10rem;
+  .share-actions-icons {
+    gap: 0.4rem;
+  }
+
+  .share-icon-btn {
+    width: 2.2rem;
+    height: 2.2rem;
   }
 
   .comment-form-meta {
