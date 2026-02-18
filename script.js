@@ -360,17 +360,29 @@ if (engagementRoot && shouldEnableEngagement()) {
   const likedKey = `teaching-liked-v1:${pageSlug}`;
   const sortKey = `teaching-comment-sort-v1:${pageSlug}`;
   const visitorIdKey = "teaching-visitor-id-v1";
+  const commentRateKey = `teaching-comment-rate-v1:${pageSlug}`;
   const storageFallback = { likes: 0, comments: [] };
   const commentMinLength = 3;
   const commentMaxLength = 1200;
+  const commentRateWindowMs = 10 * 60 * 1000;
+  const commentRateMax = 5;
   const supabaseConfig = window.SUPABASE_CONFIG || {};
   const supabaseUrl = String(supabaseConfig.url || "").trim().replace(/\/+$/, "");
   const supabaseAnonKey = String(supabaseConfig.anonKey || "").trim();
+  const edgeFunctionName = String(supabaseConfig.edgeFunctionName || "engagement").trim();
+  const turnstileSiteKey = String(supabaseConfig.turnstileSiteKey || "").trim();
   const hasSupabase =
     Boolean(supabaseUrl) &&
     Boolean(supabaseAnonKey) &&
     !supabaseUrl.includes("YOUR-PROJECT") &&
     !supabaseAnonKey.includes("YOUR-ANON-KEY");
+  const edgeFunctionUrl = hasSupabase && edgeFunctionName
+    ? `${supabaseUrl}/functions/v1/${edgeFunctionName}`
+    : "";
+
+  let writeMode = "local";
+  let turnstileWidgetId = null;
+  let turnstileToken = "";
 
   const createShareSection = (position) => {
     const section = document.createElement("section");
@@ -544,6 +556,28 @@ if (engagementRoot && shouldEnableEngagement()) {
     }
   };
 
+  const loadRateLog = () => {
+    try {
+      const raw = window.localStorage.getItem(commentRateKey);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value) && value > 0);
+    } catch {
+      return [];
+    }
+  };
+
+  const saveRateLog = (timestamps) => {
+    try {
+      window.localStorage.setItem(commentRateKey, JSON.stringify(timestamps));
+    } catch {
+      // Ignore storage failures.
+    }
+  };
+
   const getOrCreateVisitorId = () => {
     try {
       const existing = window.localStorage.getItem(visitorIdKey);
@@ -568,6 +602,8 @@ if (engagementRoot && shouldEnableEngagement()) {
     <form class="comment-form" data-comment-form>
       <label for="comment-input">Comment</label>
       <textarea id="comment-input" class="comment-input" rows="4" maxlength="${commentMaxLength}" placeholder="Add your reflection or note"></textarea>
+      <input type="text" class="hp-field" tabindex="-1" autocomplete="off" data-comment-honeypot aria-hidden="true" />
+      <div class="turnstile-slot" data-turnstile-slot></div>
       <div class="comment-form-meta">
         <p class="comment-counter" data-comment-counter>0 / ${commentMaxLength}</p>
         <button type="submit" class="btn btn-primary comment-submit">Post Comment</button>
@@ -595,6 +631,8 @@ if (engagementRoot && shouldEnableEngagement()) {
   const likeCount = engagementSection.querySelector("[data-like-count]");
   const commentForm = engagementSection.querySelector("[data-comment-form]");
   const commentInput = engagementSection.querySelector("#comment-input");
+  const commentHoneypot = engagementSection.querySelector("[data-comment-honeypot]");
+  const turnstileSlot = engagementSection.querySelector("[data-turnstile-slot]");
   const commentList = engagementSection.querySelector("[data-comment-list]");
   const commentEmpty = engagementSection.querySelector("[data-comment-empty]");
   const commentCounter = engagementSection.querySelector("[data-comment-counter]");
@@ -660,6 +698,21 @@ if (engagementRoot && shouldEnableEngagement()) {
           })}`;
 
       item.append(message, meta);
+
+      if (writeMode === "edge" && entry.id) {
+        const actions = document.createElement("div");
+        actions.className = "comment-actions";
+
+        const reportButton = document.createElement("button");
+        reportButton.type = "button";
+        reportButton.className = "comment-report";
+        reportButton.setAttribute("data-comment-report", entry.id);
+        reportButton.textContent = "Report";
+
+        actions.appendChild(reportButton);
+        item.appendChild(actions);
+      }
+
       commentList.appendChild(item);
     });
   };
@@ -699,13 +752,33 @@ if (engagementRoot && shouldEnableEngagement()) {
       headers["Content-Type"] = "application/json";
     }
 
-    const response = await fetch(`${supabaseUrl}${path}`, {
+    return fetch(`${supabaseUrl}${path}`, {
       method: options.method || "GET",
       headers,
       body: options.body ? JSON.stringify(options.body) : undefined
     });
+  };
 
-    return response;
+  const edgeRequest = async (action, payload = {}) => {
+    if (!edgeFunctionUrl) throw new Error("Edge function URL is not configured.");
+
+    const response = await fetch(edgeFunctionUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: supabaseAnonKey,
+        Authorization: `Bearer ${supabaseAnonKey}`
+      },
+      body: JSON.stringify({ action, pageSlug, visitorId, ...payload })
+    });
+
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || body?.ok === false) {
+      const message = typeof body?.error === "string" ? body.error : "Edge request failed.";
+      throw new Error(message);
+    }
+
+    return body;
   };
 
   const parseCountFromRange = (contentRange) => {
@@ -762,20 +835,6 @@ if (engagementRoot && shouldEnableEngagement()) {
       .filter((entry) => entry.text.length > 0);
   };
 
-  const validateCommentText = () => {
-    if (!commentInput) return "";
-    const text = commentInput.value.trim();
-    if (text.length < commentMinLength) {
-      setCommentStatus(`Comment should be at least ${commentMinLength} characters.`, "error");
-      return "";
-    }
-    if (text.length > commentMaxLength) {
-      setCommentStatus(`Comment should be ${commentMaxLength} characters or less.`, "error");
-      return "";
-    }
-    return text;
-  };
-
   const insertRemoteLike = async () => {
     const response = await supabaseRequest("/rest/v1/page_likes", {
       method: "POST",
@@ -826,6 +885,61 @@ if (engagementRoot && shouldEnableEngagement()) {
     };
   };
 
+  const validateCommentRate = () => {
+    const now = Date.now();
+    const activeLog = loadRateLog().filter((stamp) => now - stamp <= commentRateWindowMs);
+
+    if (activeLog.length >= commentRateMax) {
+      setCommentStatus(
+        "You are posting too quickly. Please wait a few minutes and try again.",
+        "error"
+      );
+      return false;
+    }
+
+    return true;
+  };
+
+  const recordCommentRate = () => {
+    const now = Date.now();
+    const activeLog = loadRateLog().filter((stamp) => now - stamp <= commentRateWindowMs);
+    activeLog.push(now);
+    saveRateLog(activeLog);
+  };
+
+  const validateCommentText = () => {
+    if (!commentInput) return "";
+
+    if (commentHoneypot?.value.trim()) {
+      setCommentStatus("Unable to post comment right now.", "error");
+      return "";
+    }
+
+    const text = commentInput.value.trim();
+    if (text.length < commentMinLength) {
+      setCommentStatus(`Comment should be at least ${commentMinLength} characters.`, "error");
+      return "";
+    }
+    if (text.length > commentMaxLength) {
+      setCommentStatus(`Comment should be ${commentMaxLength} characters or less.`, "error");
+      return "";
+    }
+
+    if (writeMode === "edge" && turnstileSiteKey && !turnstileToken) {
+      setCommentStatus("Complete the verification challenge first.", "error");
+      return "";
+    }
+
+    return text;
+  };
+
+  const resetTurnstile = () => {
+    if (turnstileWidgetId !== null && window.turnstile?.reset) {
+      window.turnstile.reset(turnstileWidgetId);
+      turnstileToken = "";
+    }
+  };
+
   const setButtonsDisabled = (disabled) => {
     if (likeButton) likeButton.disabled = disabled;
     if (commentForm) {
@@ -834,52 +948,72 @@ if (engagementRoot && shouldEnableEngagement()) {
     }
   };
 
+  const loadTurnstileScript = async () => {
+    if (!turnstileSiteKey) return false;
+    if (window.turnstile) return true;
+
+    return new Promise((resolve) => {
+      const existing = document.querySelector("script[data-turnstile-script]");
+      if (existing) {
+        existing.addEventListener("load", () => resolve(Boolean(window.turnstile)), {
+          once: true
+        });
+        existing.addEventListener("error", () => resolve(false), { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.setAttribute("data-turnstile-script", "true");
+      script.addEventListener("load", () => resolve(Boolean(window.turnstile)), { once: true });
+      script.addEventListener("error", () => resolve(false), { once: true });
+      document.head.appendChild(script);
+    });
+  };
+
+  const mountTurnstile = async () => {
+    if (!turnstileSlot || !turnstileSiteKey || turnstileWidgetId !== null) return;
+
+    const loaded = await loadTurnstileScript();
+    if (!loaded || !window.turnstile?.render) {
+      setCommentStatus("Bot protection is unavailable. Please try again later.", "error");
+      return;
+    }
+
+    turnstileWidgetId = window.turnstile.render(turnstileSlot, {
+      sitekey: turnstileSiteKey,
+      theme: "light",
+      callback: (token) => {
+        turnstileToken = token;
+        if (commentStatus?.getAttribute("data-state") === "error") {
+          setCommentStatus("", "info");
+        }
+      },
+      "expired-callback": () => {
+        turnstileToken = "";
+      },
+      "error-callback": () => {
+        turnstileToken = "";
+      }
+    });
+  };
+
+  const setWriteMode = (mode) => {
+    writeMode = mode;
+    renderComments();
+  };
+
   const setupLocalMode = () => {
+    setWriteMode("local");
     setEngagementNote("Local mode: configure Supabase to sync likes and comments across visitors.");
     setCommentStatus("Comments are saved on this device.", "info");
     updateUi();
-
-    if (likeButton) {
-      likeButton.addEventListener("click", () => {
-        liked = !liked;
-        state.likes = liked ? state.likes + 1 : Math.max(0, state.likes - 1);
-        saveLocalLiked(liked);
-        saveLocalState(state);
-        renderLikes();
-      });
-    }
-
-    if (commentForm && commentInput) {
-      commentForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const text = validateCommentText();
-        if (!text) return;
-
-        const submit = commentForm.querySelector(".comment-submit");
-        if (submit) submit.disabled = true;
-        setCommentStatus("Posting comment...", "pending");
-
-        state.comments = [
-          ...state.comments,
-          {
-            id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-            text,
-            createdAt: new Date().toISOString()
-          }
-        ];
-
-        saveLocalState(state);
-        commentInput.value = "";
-        updateCounter();
-        renderComments();
-        setCommentStatus("Comment posted.", "success");
-        if (submit) submit.disabled = false;
-      });
-    }
   };
 
   const setupSupabaseMode = async () => {
-    setEngagementNote("Live mode: likes and comments are synced with Supabase.");
+    setEngagementNote("Loading live discussion...");
     setCommentStatus("Loading comments...", "pending");
     setButtonsDisabled(true);
 
@@ -895,68 +1029,167 @@ if (engagementRoot && shouldEnableEngagement()) {
       liked = likedState;
       saveLocalLiked(liked);
       updateUi();
-      setCommentStatus("", "info");
     } catch {
-      setEngagementNote("Supabase unavailable right now. Using local mode for this browser.");
-      setCommentStatus("Live comments are unavailable right now.", "error");
       setupLocalMode();
       setButtonsDisabled(false);
       return;
     }
 
+    if (edgeFunctionUrl) {
+      try {
+        await edgeRequest("health");
+        setWriteMode("edge");
+        setEngagementNote("Secure live mode: anti-spam and moderation are active.");
+        setCommentStatus("", "info");
+        await mountTurnstile();
+      } catch {
+        setWriteMode("rest");
+        setEngagementNote("Live mode: deploy the engagement Edge Function for stronger anti-spam protection.");
+        setCommentStatus("", "info");
+      }
+    } else {
+      setWriteMode("rest");
+      setEngagementNote("Live mode: likes and comments are synced with Supabase.");
+      setCommentStatus("", "info");
+    }
+
     setButtonsDisabled(false);
+  };
 
-    if (likeButton) {
-      likeButton.addEventListener("click", async () => {
-        const nextLiked = !liked;
-        likeButton.disabled = true;
+  if (likeButton) {
+    likeButton.addEventListener("click", async () => {
+      const nextLiked = !liked;
+      likeButton.disabled = true;
 
-        try {
+      try {
+        if (writeMode === "local") {
+          liked = nextLiked;
+          state.likes = liked ? state.likes + 1 : Math.max(0, state.likes - 1);
+          saveLocalLiked(liked);
+          saveLocalState(state);
+          renderLikes();
+          setCommentStatus("", "info");
+        } else if (writeMode === "edge") {
+          const response = await edgeRequest("toggleLike", { like: nextLiked });
+          liked = Boolean(response.liked);
+          state.likes = Number.isFinite(Number(response.likes)) ? Number(response.likes) : state.likes;
+          saveLocalLiked(liked);
+          renderLikes();
+          setCommentStatus("", "info");
+        } else {
           if (nextLiked) {
             await insertRemoteLike();
           } else {
             await deleteRemoteLike();
           }
-
           liked = nextLiked;
           saveLocalLiked(liked);
           state.likes = await fetchRemoteLikesCount();
           renderLikes();
           setCommentStatus("", "info");
-        } catch {
-          setEngagementNote("Could not update like right now. Please try again.");
-          setCommentStatus("Could not update like right now.", "error");
-        } finally {
-          likeButton.disabled = false;
         }
-      });
-    }
+      } catch {
+        setEngagementNote("Could not update like right now. Please try again.");
+        setCommentStatus("Could not update like right now.", "error");
+      } finally {
+        likeButton.disabled = false;
+      }
+    });
+  }
 
-    if (commentForm && commentInput) {
-      commentForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const text = validateCommentText();
-        if (!text) return;
+  if (commentForm && commentInput) {
+    commentForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!validateCommentRate()) return;
 
-        const submit = commentForm.querySelector(".comment-submit");
-        if (submit) submit.disabled = true;
-        setCommentStatus("Posting comment...", "pending");
+      const text = validateCommentText();
+      if (!text) return;
 
-        try {
-          const comment = await insertRemoteComment(text);
+      const submit = commentForm.querySelector(".comment-submit");
+      if (submit) submit.disabled = true;
+      setCommentStatus("Posting comment...", "pending");
+
+      try {
+        let comment;
+
+        if (writeMode === "local") {
+          comment = {
+            id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            text,
+            createdAt: new Date().toISOString()
+          };
           state.comments = [...state.comments, comment];
-          commentInput.value = "";
-          updateCounter();
-          renderComments();
-          setCommentStatus("Comment posted.", "success");
-        } catch {
-          setCommentStatus("Could not post comment right now. Please try again.", "error");
-        } finally {
-          if (submit) submit.disabled = false;
+          saveLocalState(state);
+        } else if (writeMode === "edge") {
+          const response = await edgeRequest("postComment", {
+            commentText: text,
+            honeypot: commentHoneypot?.value || "",
+            turnstileToken
+          });
+
+          comment = response.comment
+            ? {
+                id: String(response.comment.id),
+                text: String(response.comment.text || "").trim(),
+                createdAt: String(response.comment.createdAt || new Date().toISOString())
+              }
+            : null;
+
+          if (comment && comment.text) {
+            state.comments = [...state.comments, comment];
+          }
+
+          resetTurnstile();
+        } else {
+          comment = await insertRemoteComment(text);
+          state.comments = [...state.comments, comment];
         }
-      });
-    }
-  };
+
+        recordCommentRate();
+        commentInput.value = "";
+        if (commentHoneypot) commentHoneypot.value = "";
+        updateCounter();
+        renderComments();
+        setCommentStatus("Comment posted.", "success");
+      } catch {
+        setCommentStatus("Could not post comment right now. Please try again.", "error");
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+
+  if (commentList) {
+    commentList.addEventListener("click", async (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement)) return;
+
+      const button = target.closest("[data-comment-report]");
+      if (!(button instanceof HTMLButtonElement)) return;
+
+      if (writeMode !== "edge") {
+        setCommentStatus("Report is available in secure mode only.", "info");
+        return;
+      }
+
+      const commentId = button.getAttribute("data-comment-report");
+      if (!commentId) return;
+
+      button.disabled = true;
+
+      try {
+        await edgeRequest("reportComment", {
+          commentId,
+          reason: "community-flag"
+        });
+        setCommentStatus("Comment reported. Thank you.", "success");
+      } catch {
+        setCommentStatus("Could not report this comment right now.", "error");
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
 
   if (commentSort) {
     commentSort.addEventListener("change", () => {

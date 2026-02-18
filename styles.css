@@ -934,6 +934,11 @@ section {
   color: #c9190b;
 }
 
+.turnstile-slot {
+  margin-top: 0.7rem;
+  min-height: 64px;
+}
+
 .comment-list {
   list-style: none;
   margin: 0;
@@ -957,6 +962,31 @@ section {
   margin: 0.45rem 0 0;
   font-size: 0.83rem;
   color: var(--muted);
+}
+
+.comment-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment-report {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--muted);
+  border-radius: 0.2rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.24rem 0.52rem;
+  cursor: pointer;
+}
+
+.comment-report:hover,
+.comment-report:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
 }
 
 .comment-empty {
