@@ -417,16 +417,13 @@ if (
     return section;
   };
 
-  const topShareSection = createShareSection("top");
-  const bottomShareSection = createShareSection("bottom");
-
+  const shareSection = createShareSection("top");
   const firstPanel = engagementRoot.querySelector("section.panel");
   if (firstPanel) {
-    engagementRoot.insertBefore(topShareSection, firstPanel);
+    engagementRoot.insertBefore(shareSection, firstPanel);
   } else {
-    engagementRoot.appendChild(topShareSection);
+    engagementRoot.appendChild(shareSection);
   }
-  engagementRoot.appendChild(bottomShareSection);
 
   const buildShareLink = (platform) => {
     const url = encodeURIComponent(pageUrl);
@@ -490,8 +487,7 @@ if (
     });
   };
 
-  attachShareHandlers(topShareSection);
-  attachShareHandlers(bottomShareSection);
+  attachShareHandlers(shareSection);
 
   const sanitizeState = (rawState) => {
     const safeState = { ...storageFallback };
