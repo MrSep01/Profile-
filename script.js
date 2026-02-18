@@ -608,6 +608,7 @@ if (
       return base || `${pageSlug}-section-${index + 1}`;
     };
 
+    const headingById = new Map();
     const tocItems = headings.map((heading, index) => {
       let id = heading.id || "";
       if (!id) {
@@ -621,6 +622,7 @@ if (
         heading.id = id;
       }
       usedIds.add(id);
+      headingById.set(id, heading);
       return {
         id,
         level: heading.tagName.toLowerCase(),
@@ -656,6 +658,81 @@ if (
     } else {
       firstPanel.appendChild(toc);
     }
+
+    const tocLinks = Array.from(toc.querySelectorAll(".toc-item a")).filter(
+      (link) => link instanceof HTMLAnchorElement
+    );
+    const tocItemsById = new Map();
+    tocItems.forEach((item) => {
+      const matchingLink = tocLinks.find((link) => link.getAttribute("href") === `#${item.id}`);
+      const matchingItem = matchingLink?.parentElement;
+      if (matchingItem) tocItemsById.set(item.id, matchingItem);
+    });
+
+    const setActiveTocItem = (id) => {
+      tocItemsById.forEach((itemEl, itemId) => {
+        const isActive = itemId === id;
+        itemEl.classList.toggle("is-active", isActive);
+      });
+    };
+
+    const findActiveHeadingFromScroll = () => {
+      const threshold = 170;
+      let candidate = tocItems[0]?.id || "";
+      headings.forEach((heading) => {
+        const top = heading.getBoundingClientRect().top;
+        if (top <= threshold) {
+          candidate = heading.id;
+        }
+      });
+      if (candidate) setActiveTocItem(candidate);
+    };
+
+    tocLinks.forEach((link) => {
+      const targetId = decodeURIComponent((link.getAttribute("href") || "").slice(1));
+      if (!targetId) return;
+      link.addEventListener("click", (event) => {
+        const target = headingById.get(targetId);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (window.history?.replaceState) {
+          window.history.replaceState(null, "", `#${targetId}`);
+        }
+        setActiveTocItem(targetId);
+      });
+    });
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (!visible.length) return;
+          const nextId = visible[0].target.id;
+          if (nextId) setActiveTocItem(nextId);
+        },
+        {
+          root: null,
+          rootMargin: "-18% 0px -65% 0px",
+          threshold: [0, 1]
+        }
+      );
+      headings.forEach((heading) => observer.observe(heading));
+    } else {
+      window.addEventListener("scroll", findActiveHeadingFromScroll, { passive: true });
+    }
+
+    if (window.location.hash) {
+      const hashId = decodeURIComponent(window.location.hash.slice(1));
+      if (tocItemsById.has(hashId)) {
+        setActiveTocItem(hashId);
+        return;
+      }
+    }
+
+    setActiveTocItem(tocItems[0]?.id || "");
   };
 
   createDetailMeta();
