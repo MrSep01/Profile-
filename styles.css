@@ -997,6 +997,29 @@ body.detail-page-blog .post-figure {
   text-underline-offset: 0.16em;
 }
 
+.heading-anchor-link {
+  color: #8a8d90;
+  text-decoration: none;
+  font-size: 0.8em;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 150ms ease, color 150ms ease;
+}
+
+h2:hover .heading-anchor-link,
+h2:focus-within .heading-anchor-link,
+h3:hover .heading-anchor-link,
+h3:focus-within .heading-anchor-link,
+.heading-anchor-link:focus-visible {
+  opacity: 1;
+}
+
+.heading-anchor-link:hover,
+.heading-anchor-link:focus-visible {
+  color: var(--accent);
+  outline: none;
+}
+
 .toc-item a:hover,
 .toc-item a:focus-visible {
   color: var(--accent);

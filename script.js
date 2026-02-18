@@ -623,10 +623,19 @@ if (
       }
       usedIds.add(id);
       headingById.set(id, heading);
+      const headingLabel = (heading.textContent || "").trim();
+      if (!heading.querySelector(".heading-anchor-link")) {
+        const anchor = document.createElement("a");
+        anchor.className = "heading-anchor-link";
+        anchor.href = `#${id}`;
+        anchor.setAttribute("aria-label", `Link to section: ${headingLabel}`);
+        anchor.textContent = "#";
+        heading.append(" ", anchor);
+      }
       return {
         id,
         level: heading.tagName.toLowerCase(),
-        label: (heading.textContent || "").trim()
+        label: headingLabel
       };
     });
 
