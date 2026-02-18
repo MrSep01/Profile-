@@ -831,9 +831,14 @@ body.detail-page-blog .post-figure {
   justify-content: flex-end;
   align-items: center;
   gap: 0.55rem;
+  width: fit-content;
+  margin-left: auto;
 }
 
 .share-panel-top {
+  position: sticky;
+  top: 5.2rem;
+  z-index: 4;
   margin: 0 0 0.9rem;
 }
 
@@ -1700,6 +1705,8 @@ footer {
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 0.35rem 0.55rem;
+    width: 100%;
+    margin-left: 0;
   }
 
   .share-actions-icons {
@@ -1898,6 +1905,18 @@ h2 {
 }
 
 .subpage-banner,
+.hero-card,
+form,
+.post-figure,
+.video-embed-slot,
+.video-frame {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
 .resource-card,
 .subject-card,
 .video-card,
@@ -1905,15 +1924,11 @@ h2 {
 .hunt-card,
 .mini-panel,
 .stats-grid article,
-.hero-card,
-form,
-.featured-metric,
-.post-figure,
-.video-embed-slot,
-.video-frame {
+.featured-metric {
   background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 0.2rem;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
   box-shadow: none;
   backdrop-filter: none;
 }
@@ -2171,6 +2186,11 @@ footer {
 @media (max-width: 930px) {
   .topbar {
     padding: 0.85rem 1rem;
+  }
+
+  .share-panel-top {
+    position: static;
+    top: auto;
   }
 
   .page-banner {
