@@ -376,13 +376,17 @@ if (
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
   const likedKey = `teaching-liked-v1:${pageSlug}`;
   const sortKey = `teaching-comment-sort-v1:${pageSlug}`;
+  const commentNameKey = "teaching-comment-name-v1";
   const visitorIdKey = "teaching-visitor-id-v1";
   const commentRateKey = `teaching-comment-rate-v1:${pageSlug}`;
   const storageFallback = { likes: 0, comments: [] };
   const commentMinLength = 3;
   const commentMaxLength = 1200;
+  const authorNameMaxLength = 80;
+  const defaultAuthorName = "Guest";
   const commentRateWindowMs = 10 * 60 * 1000;
   const commentRateMax = 5;
+  const commentsPageSize = 10;
   const supabaseConfig = window.SUPABASE_CONFIG || {};
   const supabaseUrl = String(supabaseConfig.url || "").trim().replace(/\/+$/, "");
   const supabaseAnonKey = String(supabaseConfig.anonKey || "").trim();
@@ -422,6 +426,7 @@ if (
   const createShareSection = (position) => {
     const section = document.createElement("section");
     section.className = `reveal share-panel share-panel-${position}`;
+    section.setAttribute("data-share-placement", position);
     section.innerHTML = `
       <div class="share-head">
         <p class="share-kicker">Share</p>
@@ -490,6 +495,7 @@ if (
   };
 
   const attachShareHandlers = (section) => {
+    const placement = section.getAttribute("data-share-placement") || "top";
     const buttons = section.querySelectorAll("[data-share]");
     buttons.forEach((button) => {
       button.addEventListener("click", async () => {
@@ -500,6 +506,7 @@ if (
           try {
             await navigator.clipboard.writeText(pageUrl);
             setShareFeedback(section, "Link copied.");
+            void trackShareEvent(platform, placement);
           } catch {
             setShareFeedback(section, "Could not copy link.");
           }
@@ -512,11 +519,13 @@ if (
         if (platform === "email") {
           window.location.href = shareLink;
           setShareFeedback(section, "Opening email.");
+          void trackShareEvent(platform, placement);
           return;
         }
 
         window.open(shareLink, "_blank", "noopener,noreferrer");
         setShareFeedback(section, `Opening ${platform}.`);
+        void trackShareEvent(platform, placement);
       });
     });
   };
@@ -760,6 +769,10 @@ if (
         .map((entry) => ({
           id: String(entry.id || `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
           text: entry.text.trim(),
+          authorName:
+            typeof entry.authorName === "string" && entry.authorName.trim()
+              ? entry.authorName.trim().slice(0, authorNameMaxLength)
+              : defaultAuthorName,
           createdAt:
             typeof entry.createdAt === "string" && !Number.isNaN(Date.parse(entry.createdAt))
               ? entry.createdAt
@@ -822,6 +835,24 @@ if (
     }
   };
 
+  const loadCommentAuthor = () => {
+    try {
+      const saved = window.localStorage.getItem(commentNameKey);
+      if (!saved) return "";
+      return saved.trim().slice(0, authorNameMaxLength);
+    } catch {
+      return "";
+    }
+  };
+
+  const saveCommentAuthor = (value) => {
+    try {
+      window.localStorage.setItem(commentNameKey, value.trim().slice(0, authorNameMaxLength));
+    } catch {
+      // Ignore storage failures.
+    }
+  };
+
   const loadRateLog = () => {
     try {
       const raw = window.localStorage.getItem(commentRateKey);
@@ -867,6 +898,8 @@ if (
       <p class="like-count" data-like-count>0 likes</p>
     </div>
     <form class="comment-form" data-comment-form>
+      <label for="comment-author">Name (optional)</label>
+      <input id="comment-author" class="comment-author-input" type="text" maxlength="${authorNameMaxLength}" placeholder="Guest" />
       <label for="comment-input">Comment</label>
       <textarea id="comment-input" class="comment-input" rows="4" maxlength="${commentMaxLength}" placeholder="Add your reflection or note"></textarea>
       <input type="text" class="hp-field" tabindex="-1" autocomplete="off" data-comment-honeypot aria-hidden="true" />
@@ -888,6 +921,7 @@ if (
       </div>
       <p class="comment-status" data-comment-status aria-live="polite"></p>
       <ul class="comment-list" data-comment-list></ul>
+      <button type="button" class="btn btn-secondary comment-load-more" data-comment-load hidden>Load more comments</button>
       <p class="comment-empty" data-comment-empty>No comments yet.</p>
     </div>
   `;
@@ -898,10 +932,12 @@ if (
   const likeCount = engagementSection.querySelector("[data-like-count]");
   const commentForm = engagementSection.querySelector("[data-comment-form]");
   const commentInput = engagementSection.querySelector("#comment-input");
+  const commentAuthorInput = engagementSection.querySelector("#comment-author");
   const commentHoneypot = engagementSection.querySelector("[data-comment-honeypot]");
   const turnstileSlot = engagementSection.querySelector("[data-turnstile-slot]");
   const commentList = engagementSection.querySelector("[data-comment-list]");
   const commentEmpty = engagementSection.querySelector("[data-comment-empty]");
+  const commentLoad = engagementSection.querySelector("[data-comment-load]");
   const commentCounter = engagementSection.querySelector("[data-comment-counter]");
   const commentSort = engagementSection.querySelector("[data-comment-sort]");
   const commentStatus = engagementSection.querySelector("[data-comment-status]");
@@ -910,9 +946,12 @@ if (
   let state = loadLocalState();
   let liked = loadLocalLiked();
   let sortMode = loadSortMode();
+  let visibleComments = commentsPageSize;
   const visitorId = getOrCreateVisitorId();
+  let commentAuthor = loadCommentAuthor();
 
   if (commentSort) commentSort.value = sortMode;
+  if (commentAuthorInput) commentAuthorInput.value = commentAuthor;
 
   const formatLikeText = (likes) => `${likes} like${likes === 1 ? "" : "s"}`;
 
@@ -938,12 +977,14 @@ if (
 
     if (!sortedComments.length) {
       commentEmpty.hidden = false;
+      if (commentLoad) commentLoad.hidden = true;
       return;
     }
 
     commentEmpty.hidden = true;
+    const visibleList = sortedComments.slice(0, visibleComments);
 
-    sortedComments.forEach((entry) => {
+    visibleList.forEach((entry) => {
       const item = document.createElement("li");
       item.className = "comment-item";
 
@@ -954,9 +995,12 @@ if (
       const meta = document.createElement("p");
       meta.className = "comment-meta";
       const timestamp = new Date(entry.createdAt);
+      const author = typeof entry.authorName === "string" && entry.authorName.trim()
+        ? entry.authorName.trim()
+        : defaultAuthorName;
       meta.textContent = Number.isNaN(timestamp.getTime())
-        ? "Visitor · Saved locally"
-        : `Visitor · ${timestamp.toLocaleString([], {
+        ? `${author} · Saved locally`
+        : `${author} · ${timestamp.toLocaleString([], {
             year: "numeric",
             month: "short",
             day: "numeric",
@@ -982,6 +1026,10 @@ if (
 
       commentList.appendChild(item);
     });
+
+    if (commentLoad) {
+      commentLoad.hidden = sortedComments.length <= visibleComments;
+    }
   };
 
   const updateCounter = () => {
@@ -1048,6 +1096,18 @@ if (
     return body;
   };
 
+  const trackShareEvent = async (channel, placement = "top") => {
+    if (!edgeFunctionUrl || !channel) return;
+    try {
+      await edgeRequest("trackShare", {
+        channel,
+        placement
+      });
+    } catch {
+      // Ignore analytics failures so sharing never breaks UX.
+    }
+  };
+
   const parseCountFromRange = (contentRange) => {
     if (!contentRange) return 0;
     const [, totalRaw] = contentRange.split("/");
@@ -1080,26 +1140,40 @@ if (
   };
 
   const fetchRemoteComments = async () => {
-    const response = await supabaseRequest(
-      `/rest/v1/page_comments?page_slug=eq.${encodeURIComponent(
-        pageSlug
-      )}&select=id,comment_text,created_at&order=created_at.asc`
-    );
-    if (!response.ok) throw new Error("Unable to load comments.");
-    const data = await response.json();
-    if (!Array.isArray(data)) return [];
+    const basePath = `/rest/v1/page_comments?page_slug=eq.${encodeURIComponent(pageSlug)}&order=created_at.asc`;
+    const tryPaths = [
+      `${basePath}&select=id,comment_text,author_name,created_at`,
+      `${basePath}&select=id,comment_text,created_at`
+    ];
 
-    return data
-      .filter((entry) => typeof entry.comment_text === "string")
-      .map((entry) => ({
-        id: String(entry.id),
-        text: entry.comment_text.trim(),
-        createdAt:
-          typeof entry.created_at === "string" && !Number.isNaN(Date.parse(entry.created_at))
-            ? entry.created_at
-            : new Date().toISOString()
-      }))
-      .filter((entry) => entry.text.length > 0);
+    let lastError = null;
+    for (const path of tryPaths) {
+      const response = await supabaseRequest(path);
+      if (!response.ok) {
+        lastError = new Error("Unable to load comments.");
+        continue;
+      }
+      const data = await response.json();
+      if (!Array.isArray(data)) return [];
+
+      return data
+        .filter((entry) => typeof entry.comment_text === "string")
+        .map((entry) => ({
+          id: String(entry.id),
+          text: entry.comment_text.trim(),
+          authorName:
+            typeof entry.author_name === "string" && entry.author_name.trim()
+              ? entry.author_name.trim()
+              : defaultAuthorName,
+          createdAt:
+            typeof entry.created_at === "string" && !Number.isNaN(Date.parse(entry.created_at))
+              ? entry.created_at
+              : new Date().toISOString()
+        }))
+        .filter((entry) => entry.text.length > 0);
+    }
+
+    throw lastError || new Error("Unable to load comments.");
   };
 
   const insertRemoteLike = async () => {
@@ -1124,32 +1198,46 @@ if (
     if (!response.ok) throw new Error("Unable to remove your like.");
   };
 
-  const insertRemoteComment = async (text) => {
-    const response = await supabaseRequest("/rest/v1/page_comments", {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: [{ page_slug: pageSlug, comment_text: text }]
-    });
+  const insertRemoteComment = async (text, authorName) => {
+    const payloads = [
+      [{ page_slug: pageSlug, comment_text: text, author_name: authorName }],
+      [{ page_slug: pageSlug, comment_text: text }]
+    ];
 
-    if (!response.ok) throw new Error("Unable to post comment.");
-    const data = await response.json();
-    const first = Array.isArray(data) ? data[0] : null;
-    if (!first || typeof first.comment_text !== "string") {
+    for (const body of payloads) {
+      const response = await supabaseRequest("/rest/v1/page_comments", {
+        method: "POST",
+        headers: { Prefer: "return=representation" },
+        body
+      });
+
+      if (!response.ok) continue;
+      const data = await response.json();
+      const first = Array.isArray(data) ? data[0] : null;
+      if (!first || typeof first.comment_text !== "string") {
+        return {
+          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          text,
+          authorName,
+          createdAt: new Date().toISOString()
+        };
+      }
+
       return {
-        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-        text,
-        createdAt: new Date().toISOString()
+        id: String(first.id),
+        text: first.comment_text.trim(),
+        authorName:
+          typeof first.author_name === "string" && first.author_name.trim()
+            ? first.author_name.trim()
+            : authorName,
+        createdAt:
+          typeof first.created_at === "string" && !Number.isNaN(Date.parse(first.created_at))
+            ? first.created_at
+            : new Date().toISOString()
       };
     }
 
-    return {
-      id: String(first.id),
-      text: first.comment_text.trim(),
-      createdAt:
-        typeof first.created_at === "string" && !Number.isNaN(Date.parse(first.created_at))
-          ? first.created_at
-          : new Date().toISOString()
-    };
+    throw new Error("Unable to post comment.");
   };
 
   const validateCommentRate = () => {
@@ -1198,6 +1286,12 @@ if (
     }
 
     return text;
+  };
+
+  const sanitizeAuthorName = () => {
+    if (!commentAuthorInput) return defaultAuthorName;
+    const raw = commentAuthorInput.value.trim().slice(0, authorNameMaxLength);
+    return raw || defaultAuthorName;
   };
 
   const resetTurnstile = () => {
@@ -1380,16 +1474,20 @@ if (
         let comment;
 
         if (writeMode === "local") {
+          const authorName = sanitizeAuthorName();
           comment = {
             id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             text,
+            authorName,
             createdAt: new Date().toISOString()
           };
           state.comments = [...state.comments, comment];
           saveLocalState(state);
         } else if (writeMode === "edge") {
+          const authorName = sanitizeAuthorName();
           const response = await edgeRequest("postComment", {
             commentText: text,
+            authorName,
             honeypot: commentHoneypot?.value || "",
             turnstileToken
           });
@@ -1398,6 +1496,10 @@ if (
             ? {
                 id: String(response.comment.id),
                 text: String(response.comment.text || "").trim(),
+                authorName:
+                  typeof response.comment.authorName === "string" && response.comment.authorName.trim()
+                    ? response.comment.authorName.trim()
+                    : authorName,
                 createdAt: String(response.comment.createdAt || new Date().toISOString())
               }
             : null;
@@ -1408,11 +1510,15 @@ if (
 
           resetTurnstile();
         } else {
-          comment = await insertRemoteComment(text);
+          const authorName = sanitizeAuthorName();
+          comment = await insertRemoteComment(text, authorName);
           state.comments = [...state.comments, comment];
         }
 
         recordCommentRate();
+        visibleComments = Math.max(visibleComments, commentsPageSize);
+        commentAuthor = sanitizeAuthorName();
+        saveCommentAuthor(commentAuthor);
         commentInput.value = "";
         if (commentHoneypot) commentHoneypot.value = "";
         updateCounter();
@@ -1462,6 +1568,14 @@ if (
     commentSort.addEventListener("change", () => {
       sortMode = commentSort.value === "oldest" ? "oldest" : "newest";
       saveSortMode(sortMode);
+      visibleComments = commentsPageSize;
+      renderComments();
+    });
+  }
+
+  if (commentLoad) {
+    commentLoad.addEventListener("click", () => {
+      visibleComments += commentsPageSize;
       renderComments();
     });
   }
@@ -1472,6 +1586,18 @@ if (
       if (commentStatus?.getAttribute("data-state") === "error") {
         setCommentStatus("", "info");
       }
+    });
+  }
+
+  if (commentAuthorInput) {
+    commentAuthorInput.addEventListener("blur", () => {
+      commentAuthor = sanitizeAuthorName();
+      if (commentAuthor === defaultAuthorName) {
+        commentAuthorInput.value = "";
+      } else {
+        commentAuthorInput.value = commentAuthor;
+      }
+      saveCommentAuthor(commentAuthor);
     });
   }
 

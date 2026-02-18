@@ -14,6 +14,9 @@ type EngagementRequest = {
   visitorId?: string;
   like?: boolean;
   commentText?: string;
+  authorName?: string;
+  channel?: string;
+  placement?: string;
   commentId?: string | number;
   reason?: string;
   honeypot?: string;
@@ -39,6 +42,26 @@ const sanitizeMultiline = (value: unknown, max = 1200) =>
   String(value ?? "")
     .trim()
     .slice(0, max);
+
+const hasFieldError = (error: unknown, fieldName: string) => {
+  if (!error || typeof error !== "object") return false;
+  const payload = error as { message?: string; details?: string; hint?: string; code?: string };
+  const text = [payload.message, payload.details, payload.hint, payload.code]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return text.includes(fieldName.toLowerCase());
+};
+
+const isMissingShareEventsRelation = (error: unknown) => {
+  if (!error || typeof error !== "object") return false;
+  const payload = error as { message?: string; details?: string; hint?: string; code?: string };
+  const text = [payload.message, payload.details, payload.hint, payload.code]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+  return text.includes("share_events");
+};
 
 const getClient = () => {
   const supabaseUrl = Deno.env.get("SUPABASE_URL") || "";
@@ -175,6 +198,7 @@ Deno.serve(async (req) => {
       }
 
       const commentText = sanitizeMultiline(body.commentText, 1200);
+      const authorName = sanitizeText(body.authorName, 80) || "Guest";
       if (commentText.length < 3) {
         return json({ ok: false, error: "Comment must be at least 3 characters." }, 400);
       }
@@ -199,18 +223,53 @@ Deno.serve(async (req) => {
         return json({ ok: false, error: "Posting too fast. Please wait a few minutes." }, 429);
       }
 
-      const { data, error } = await admin
+      let data:
+        | {
+            id: number;
+            comment_text: string;
+            author_name?: string | null;
+            created_at: string;
+          }
+        | null = null;
+
+      const primaryInsert = await admin
         .from("page_comments")
         .insert({
           page_slug: pageSlug,
           comment_text: commentText,
-          visitor_id: visitorId
+          visitor_id: visitorId,
+          author_name: authorName
         })
-        .select("id, comment_text, created_at")
+        .select("id, comment_text, author_name, created_at")
         .single();
 
-      if (error || !data) {
-        return json({ ok: false, error: "Unable to post comment." }, 500);
+      if (primaryInsert.error || !primaryInsert.data) {
+        if (!hasFieldError(primaryInsert.error, "author_name")) {
+          return json({ ok: false, error: "Unable to post comment." }, 500);
+        }
+
+        const fallbackInsert = await admin
+          .from("page_comments")
+          .insert({
+            page_slug: pageSlug,
+            comment_text: commentText,
+            visitor_id: visitorId
+          })
+          .select("id, comment_text, created_at")
+          .single();
+
+        if (fallbackInsert.error || !fallbackInsert.data) {
+          return json({ ok: false, error: "Unable to post comment." }, 500);
+        }
+
+        data = {
+          id: fallbackInsert.data.id,
+          comment_text: fallbackInsert.data.comment_text,
+          author_name: authorName,
+          created_at: fallbackInsert.data.created_at
+        };
+      } else {
+        data = primaryInsert.data;
       }
 
       return json({
@@ -218,9 +277,36 @@ Deno.serve(async (req) => {
         comment: {
           id: data.id,
           text: data.comment_text,
+          authorName: data.author_name || authorName,
           createdAt: data.created_at
         }
       });
+    }
+
+    if (action === "trackShare") {
+      const channelRaw = sanitizeText(body.channel, 40).toLowerCase();
+      const placement = sanitizeText(body.placement, 40).toLowerCase() || "top";
+      const channel = ["linkedin", "x", "facebook", "whatsapp", "email", "copy"].includes(channelRaw)
+        ? channelRaw
+        : "other";
+
+      const { error } = await admin.from("share_events").insert({
+        page_slug: pageSlug,
+        channel,
+        placement,
+        visitor_id: visitorId,
+        user_agent: sanitizeText(req.headers.get("user-agent"), 500),
+        referrer: sanitizeText(req.headers.get("referer"), 500)
+      });
+
+      if (error) {
+        if (isMissingShareEventsRelation(error)) {
+          return json({ ok: true, tracked: false, reason: "share_events table missing" });
+        }
+        return json({ ok: false, error: "Unable to track share event." }, 500);
+      }
+
+      return json({ ok: true, tracked: true });
     }
 
     if (action === "reportComment") {
