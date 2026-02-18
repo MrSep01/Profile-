@@ -415,7 +415,7 @@ if (
 
   const createShareSection = (position) => {
     const section = document.createElement("section");
-    section.className = `panel reveal share-panel share-panel-${position}`;
+    section.className = `reveal share-panel share-panel-${position}`;
     section.innerHTML = `
       <div class="share-head">
         <p class="share-kicker">Share</p>
@@ -446,9 +446,9 @@ if (
   };
 
   const shareSection = createShareSection("top");
-  const firstPanel = contentHost.querySelector("section.panel");
+  const firstPanel = contentHost.querySelector(".panel");
   if (firstPanel) {
-    contentHost.insertBefore(shareSection, firstPanel);
+    firstPanel.prepend(shareSection);
   } else {
     contentHost.appendChild(shareSection);
   }

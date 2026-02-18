@@ -771,7 +771,9 @@ section {
 }
 
 .engagement-panel {
-  margin-top: 1.4rem;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
 }
 
 body.detail-page main {
@@ -779,12 +781,23 @@ body.detail-page main {
 }
 
 body.detail-page .detail-content-stack {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
 }
 
 body.detail-page .detail-content-stack > .panel {
-  margin-top: 1rem;
+  margin-top: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+body.detail-page .detail-content-stack > .panel + .panel {
+  margin-top: 1.8rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line);
 }
 
 body.detail-page-blog .blog-post {
@@ -814,14 +827,18 @@ body.detail-page-blog .post-figure {
   border: 0;
   background: transparent;
   box-shadow: none;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 .share-panel-top {
-  margin-bottom: 0.65rem;
+  margin: 0 0 0.9rem;
 }
 
 .share-head {
-  display: block;
+  display: none;
 }
 
 .share-kicker {
@@ -834,12 +851,13 @@ body.detail-page-blog .post-figure {
 }
 
 .share-actions {
-  margin-top: 0.55rem;
+  margin-top: 0;
 }
 
 .share-actions-icons {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 0.45rem;
 }
 
@@ -871,10 +889,11 @@ body.detail-page-blog .post-figure {
 }
 
 .share-feedback {
-  min-height: 1.2rem;
-  margin: 0.5rem 0 0;
+  min-height: 0;
+  margin: 0;
   color: var(--muted);
   font-size: 0.83rem;
+  white-space: nowrap;
 }
 
 .engagement-controls {
@@ -1677,6 +1696,21 @@ footer {
     height: 2.2rem;
   }
 
+  .share-panel {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.55rem;
+  }
+
+  .share-actions-icons {
+    justify-content: flex-start;
+  }
+
+  .share-feedback {
+    width: 100%;
+    white-space: normal;
+  }
+
   .comment-form-meta {
     align-items: stretch;
   }
@@ -1863,7 +1897,6 @@ h2 {
   color: var(--accent);
 }
 
-.panel,
 .subpage-banner,
 .resource-card,
 .subject-card,
@@ -1883,6 +1916,21 @@ form,
   border-radius: 0.2rem;
   box-shadow: none;
   backdrop-filter: none;
+}
+
+.panel {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+body.detail-page-blog .post-figure {
+  border: 0;
+  background: transparent;
+  padding: 0;
 }
 
 .subpage-banner {
