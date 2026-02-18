@@ -1,31 +1,23 @@
-# Teacher Profile Website
+# Sepehr Portfolio Site
 
-A polished, responsive teacher profile website for **Dr. Amelia Hart**, built with plain HTML/CSS/JS.
+Production portfolio site for **Sepehr Massoumi Alamouti**, deployed via GitHub Pages.
 
-## Project Structure
+## Main Files
 
-- `index.html`: Main website content and sections.
-- `styles.css`: Theme, layout, responsive styles, and animations.
-- `script.js`: Reveal-on-scroll, active menu highlighting, and contact form interaction.
-- `cv/dr-amelia-hart-cv.txt`: Downloadable CV file.
-- `.github/workflows/deploy-pages.yml`: Automatic GitHub Pages deployment workflow.
+- `index.html`: Home page
+- `portfolio.html`: Portfolio landing page
+- `blog.html`: Blog category landing page
+- `styles.css`: Site styling and responsive layout
+- `script.js`: UI behavior, share tools, comments, and engagement features
+- `supabase-config.js`: Public Supabase client configuration
+- `supabase/functions/engagement/index.ts`: Edge Function for likes/comments/reports/share tracking
+- `supabase-phase-b.sql`: Phase B database hardening migration
+- `supabase-phase-c.sql`: Phase C analytics and comment metadata migration
 
 ## Local Preview
 
-Open `index.html` in your browser, or run a static server from this folder.
+Run a simple static server from this folder and open the printed URL.
 
-## Personalize Content
+## Deployment
 
-Update these files with your real details:
-
-- Name, bio, contact links, timeline: `index.html`
-- Visual style and spacing: `styles.css`
-- CV content: `cv/dr-amelia-hart-cv.txt`
-
-## Deploy to GitHub Pages
-
-1. Push this repository to GitHub.
-2. Ensure your default branch is `main` (or update the workflow branch trigger).
-3. In GitHub repo settings, go to **Pages** and set source to **GitHub Actions**.
-4. Push changes to `main`; workflow `Deploy Teacher Site to GitHub Pages` will publish the site.
-
+Site is published from `main` to GitHub Pages through the repository workflow in `.github/workflows/deploy-pages.yml`.
