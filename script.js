@@ -354,10 +354,15 @@ const engagementRoot = document.querySelector("main");
 
 if (engagementRoot && shouldEnableEngagement()) {
   const pageSlug = getPageFilename();
+  const pageUrl = window.location.href.split("#")[0];
+  const pageTitle = document.title || "Sepehr Massoumi Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
   const likedKey = `teaching-liked-v1:${pageSlug}`;
+  const sortKey = `teaching-comment-sort-v1:${pageSlug}`;
   const visitorIdKey = "teaching-visitor-id-v1";
   const storageFallback = { likes: 0, comments: [] };
+  const commentMinLength = 3;
+  const commentMaxLength = 1200;
   const supabaseConfig = window.SUPABASE_CONFIG || {};
   const supabaseUrl = String(supabaseConfig.url || "").trim().replace(/\/+$/, "");
   const supabaseAnonKey = String(supabaseConfig.anonKey || "").trim();
@@ -366,6 +371,103 @@ if (engagementRoot && shouldEnableEngagement()) {
     Boolean(supabaseAnonKey) &&
     !supabaseUrl.includes("YOUR-PROJECT") &&
     !supabaseAnonKey.includes("YOUR-ANON-KEY");
+
+  const createShareSection = (position) => {
+    const section = document.createElement("section");
+    section.className = `panel reveal share-panel share-panel-${position}`;
+    section.innerHTML = `
+      <div class="share-head">
+        <h2>Share This Page</h2>
+        <p>Share this page with your network.</p>
+      </div>
+      <div class="share-actions">
+        <button type="button" class="btn btn-secondary share-btn" data-share="linkedin">LinkedIn</button>
+        <button type="button" class="btn btn-secondary share-btn" data-share="x">X</button>
+        <button type="button" class="btn btn-secondary share-btn" data-share="facebook">Facebook</button>
+        <button type="button" class="btn btn-secondary share-btn" data-share="whatsapp">WhatsApp</button>
+        <button type="button" class="btn btn-secondary share-btn" data-share="email">Email</button>
+        <button type="button" class="btn btn-secondary share-btn" data-share="copy">Copy Link</button>
+      </div>
+      <p class="share-feedback" data-share-feedback aria-live="polite"></p>
+    `;
+    return section;
+  };
+
+  const topShareSection = createShareSection("top");
+  const bottomShareSection = createShareSection("bottom");
+
+  const firstPanel = engagementRoot.querySelector("section.panel");
+  if (firstPanel) {
+    engagementRoot.insertBefore(topShareSection, firstPanel);
+  } else {
+    engagementRoot.appendChild(topShareSection);
+  }
+  engagementRoot.appendChild(bottomShareSection);
+
+  const buildShareLink = (platform) => {
+    const url = encodeURIComponent(pageUrl);
+    const text = encodeURIComponent(pageTitle);
+
+    switch (platform) {
+      case "linkedin":
+        return `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+      case "x":
+        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+      case "facebook":
+        return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      case "whatsapp":
+        return `https://api.whatsapp.com/send?text=${text}%20${url}`;
+      case "email":
+        return `mailto:?subject=${text}&body=${url}`;
+      default:
+        return "";
+    }
+  };
+
+  const setShareFeedback = (section, message) => {
+    const feedback = section.querySelector("[data-share-feedback]");
+    if (!feedback) return;
+    feedback.textContent = message;
+    if (!message) return;
+    window.setTimeout(() => {
+      if (feedback.textContent === message) feedback.textContent = "";
+    }, 2200);
+  };
+
+  const attachShareHandlers = (section) => {
+    const buttons = section.querySelectorAll("[data-share]");
+    buttons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        const platform = button.getAttribute("data-share");
+        if (!platform) return;
+
+        if (platform === "copy") {
+          try {
+            await navigator.clipboard.writeText(pageUrl);
+            setShareFeedback(section, "Link copied.");
+          } catch {
+            setShareFeedback(section, "Could not copy link.");
+          }
+          return;
+        }
+
+        const shareLink = buildShareLink(platform);
+        if (!shareLink) return;
+
+        if (platform === "email") {
+          window.location.href = shareLink;
+          setShareFeedback(section, "Opening email.");
+          return;
+        }
+
+        window.open(shareLink, "_blank", "noopener,noreferrer");
+        setShareFeedback(section, `Opening ${platform}.`);
+      });
+    });
+  };
+
+  attachShareHandlers(topShareSection);
+  attachShareHandlers(bottomShareSection);
 
   const sanitizeState = (rawState) => {
     const safeState = { ...storageFallback };
@@ -425,6 +527,23 @@ if (engagementRoot && shouldEnableEngagement()) {
     }
   };
 
+  const loadSortMode = () => {
+    try {
+      const saved = window.localStorage.getItem(sortKey);
+      return saved === "oldest" ? "oldest" : "newest";
+    } catch {
+      return "newest";
+    }
+  };
+
+  const saveSortMode = (value) => {
+    try {
+      window.localStorage.setItem(sortKey, value);
+    } catch {
+      // Ignore storage failures.
+    }
+  };
+
   const getOrCreateVisitorId = () => {
     try {
       const existing = window.localStorage.getItem(visitorIdKey);
@@ -448,12 +567,23 @@ if (engagementRoot && shouldEnableEngagement()) {
     </div>
     <form class="comment-form" data-comment-form>
       <label for="comment-input">Comment</label>
-      <textarea id="comment-input" class="comment-input" rows="4" placeholder="Add your reflection or note"></textarea>
-      <button type="submit" class="btn btn-primary comment-submit">Post Comment</button>
+      <textarea id="comment-input" class="comment-input" rows="4" maxlength="${commentMaxLength}" placeholder="Add your reflection or note"></textarea>
+      <div class="comment-form-meta">
+        <p class="comment-counter" data-comment-counter>0 / ${commentMaxLength}</p>
+        <button type="submit" class="btn btn-primary comment-submit">Post Comment</button>
+      </div>
     </form>
     <p class="engagement-note" data-engagement-note></p>
     <div class="comment-thread">
-      <h3>Comments</h3>
+      <div class="comment-thread-head">
+        <h3>Comments</h3>
+        <label class="comment-sort-label" for="comment-sort">Sort</label>
+        <select id="comment-sort" class="comment-sort" data-comment-sort>
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+        </select>
+      </div>
+      <p class="comment-status" data-comment-status aria-live="polite"></p>
       <ul class="comment-list" data-comment-list></ul>
       <p class="comment-empty" data-comment-empty>No comments yet.</p>
     </div>
@@ -467,11 +597,17 @@ if (engagementRoot && shouldEnableEngagement()) {
   const commentInput = engagementSection.querySelector("#comment-input");
   const commentList = engagementSection.querySelector("[data-comment-list]");
   const commentEmpty = engagementSection.querySelector("[data-comment-empty]");
+  const commentCounter = engagementSection.querySelector("[data-comment-counter]");
+  const commentSort = engagementSection.querySelector("[data-comment-sort]");
+  const commentStatus = engagementSection.querySelector("[data-comment-status]");
   const engagementNote = engagementSection.querySelector("[data-engagement-note]");
 
   let state = loadLocalState();
   let liked = loadLocalLiked();
+  let sortMode = loadSortMode();
   const visitorId = getOrCreateVisitorId();
+
+  if (commentSort) commentSort.value = sortMode;
 
   const formatLikeText = (likes) => `${likes} like${likes === 1 ? "" : "s"}`;
 
@@ -487,14 +623,22 @@ if (engagementRoot && shouldEnableEngagement()) {
     if (!commentList || !commentEmpty) return;
     commentList.innerHTML = "";
 
-    if (!state.comments.length) {
+    const sortedComments = [...state.comments].sort((a, b) => {
+      const dateA = Date.parse(a.createdAt);
+      const dateB = Date.parse(b.createdAt);
+      const safeA = Number.isNaN(dateA) ? 0 : dateA;
+      const safeB = Number.isNaN(dateB) ? 0 : dateB;
+      return sortMode === "oldest" ? safeA - safeB : safeB - safeA;
+    });
+
+    if (!sortedComments.length) {
       commentEmpty.hidden = false;
       return;
     }
 
     commentEmpty.hidden = true;
 
-    state.comments.forEach((entry) => {
+    sortedComments.forEach((entry) => {
       const item = document.createElement("li");
       item.className = "comment-item";
 
@@ -506,17 +650,37 @@ if (engagementRoot && shouldEnableEngagement()) {
       meta.className = "comment-meta";
       const timestamp = new Date(entry.createdAt);
       meta.textContent = Number.isNaN(timestamp.getTime())
-        ? "Saved locally"
-        : timestamp.toLocaleString();
+        ? "Visitor · Saved locally"
+        : `Visitor · ${timestamp.toLocaleString([], {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          })}`;
 
       item.append(message, meta);
       commentList.appendChild(item);
     });
   };
 
+  const updateCounter = () => {
+    if (!commentCounter || !commentInput) return;
+    const length = commentInput.value.trim().length;
+    commentCounter.textContent = `${length} / ${commentMaxLength}`;
+    commentCounter.classList.toggle("near-limit", length >= commentMaxLength - 80);
+  };
+
+  const setCommentStatus = (message, stateLabel = "info") => {
+    if (!commentStatus) return;
+    commentStatus.textContent = message;
+    commentStatus.setAttribute("data-state", stateLabel);
+  };
+
   const updateUi = () => {
     renderLikes();
     renderComments();
+    updateCounter();
   };
 
   const setEngagementNote = (message) => {
@@ -598,6 +762,20 @@ if (engagementRoot && shouldEnableEngagement()) {
       .filter((entry) => entry.text.length > 0);
   };
 
+  const validateCommentText = () => {
+    if (!commentInput) return "";
+    const text = commentInput.value.trim();
+    if (text.length < commentMinLength) {
+      setCommentStatus(`Comment should be at least ${commentMinLength} characters.`, "error");
+      return "";
+    }
+    if (text.length > commentMaxLength) {
+      setCommentStatus(`Comment should be ${commentMaxLength} characters or less.`, "error");
+      return "";
+    }
+    return text;
+  };
+
   const insertRemoteLike = async () => {
     const response = await supabaseRequest("/rest/v1/page_likes", {
       method: "POST",
@@ -658,6 +836,7 @@ if (engagementRoot && shouldEnableEngagement()) {
 
   const setupLocalMode = () => {
     setEngagementNote("Local mode: configure Supabase to sync likes and comments across visitors.");
+    setCommentStatus("Comments are saved on this device.", "info");
     updateUi();
 
     if (likeButton) {
@@ -673,8 +852,12 @@ if (engagementRoot && shouldEnableEngagement()) {
     if (commentForm && commentInput) {
       commentForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        const text = commentInput.value.trim();
+        const text = validateCommentText();
         if (!text) return;
+
+        const submit = commentForm.querySelector(".comment-submit");
+        if (submit) submit.disabled = true;
+        setCommentStatus("Posting comment...", "pending");
 
         state.comments = [
           ...state.comments,
@@ -687,13 +870,17 @@ if (engagementRoot && shouldEnableEngagement()) {
 
         saveLocalState(state);
         commentInput.value = "";
+        updateCounter();
         renderComments();
+        setCommentStatus("Comment posted.", "success");
+        if (submit) submit.disabled = false;
       });
     }
   };
 
   const setupSupabaseMode = async () => {
     setEngagementNote("Live mode: likes and comments are synced with Supabase.");
+    setCommentStatus("Loading comments...", "pending");
     setButtonsDisabled(true);
 
     try {
@@ -708,8 +895,10 @@ if (engagementRoot && shouldEnableEngagement()) {
       liked = likedState;
       saveLocalLiked(liked);
       updateUi();
-    } catch (error) {
+      setCommentStatus("", "info");
+    } catch {
       setEngagementNote("Supabase unavailable right now. Using local mode for this browser.");
+      setCommentStatus("Live comments are unavailable right now.", "error");
       setupLocalMode();
       setButtonsDisabled(false);
       return;
@@ -733,8 +922,10 @@ if (engagementRoot && shouldEnableEngagement()) {
           saveLocalLiked(liked);
           state.likes = await fetchRemoteLikesCount();
           renderLikes();
+          setCommentStatus("", "info");
         } catch {
           setEngagementNote("Could not update like right now. Please try again.");
+          setCommentStatus("Could not update like right now.", "error");
         } finally {
           likeButton.disabled = false;
         }
@@ -744,25 +935,45 @@ if (engagementRoot && shouldEnableEngagement()) {
     if (commentForm && commentInput) {
       commentForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const text = commentInput.value.trim();
+        const text = validateCommentText();
         if (!text) return;
 
         const submit = commentForm.querySelector(".comment-submit");
         if (submit) submit.disabled = true;
+        setCommentStatus("Posting comment...", "pending");
 
         try {
           const comment = await insertRemoteComment(text);
           state.comments = [...state.comments, comment];
           commentInput.value = "";
+          updateCounter();
           renderComments();
+          setCommentStatus("Comment posted.", "success");
         } catch {
-          setEngagementNote("Could not post comment right now. Please try again.");
+          setCommentStatus("Could not post comment right now. Please try again.", "error");
         } finally {
           if (submit) submit.disabled = false;
         }
       });
     }
   };
+
+  if (commentSort) {
+    commentSort.addEventListener("change", () => {
+      sortMode = commentSort.value === "oldest" ? "oldest" : "newest";
+      saveSortMode(sortMode);
+      renderComments();
+    });
+  }
+
+  if (commentInput) {
+    commentInput.addEventListener("input", () => {
+      updateCounter();
+      if (commentStatus?.getAttribute("data-state") === "error") {
+        setCommentStatus("", "info");
+      }
+    });
+  }
 
   if (hasSupabase) {
     setupSupabaseMode();

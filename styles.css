@@ -774,6 +774,48 @@ section {
   margin-top: 1.4rem;
 }
 
+.share-panel {
+  margin-top: 1rem;
+}
+
+.share-panel-top {
+  margin-top: 0;
+}
+
+.share-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  align-items: baseline;
+}
+
+.share-head h2 {
+  margin: 0;
+}
+
+.share-head p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.share-actions {
+  margin-top: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.share-btn {
+  min-width: 8rem;
+}
+
+.share-feedback {
+  min-height: 1.2rem;
+  margin: 0.65rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .engagement-controls {
   margin-top: 0.8rem;
   display: flex;
@@ -812,8 +854,28 @@ section {
   resize: vertical;
 }
 
+.comment-form-meta {
+  margin-top: 0.55rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.comment-counter {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.comment-counter.near-limit {
+  color: var(--accent-deep);
+}
+
 .comment-submit {
-  margin-top: 0.65rem;
+  margin-top: 0;
 }
 
 .engagement-note {
@@ -826,8 +888,50 @@ section {
   margin-top: 1.1rem;
 }
 
-.comment-thread h3 {
-  margin-bottom: 0.55rem;
+.comment-thread-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.comment-thread-head h3 {
+  margin: 0;
+  margin-right: auto;
+}
+
+.comment-sort-label {
+  font-size: 0.84rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.comment-sort {
+  border: 1px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+  border-radius: 0.2rem;
+  padding: 0.34rem 0.5rem;
+  font: inherit;
+}
+
+.comment-status {
+  min-height: 1.2rem;
+  margin: 0.45rem 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.comment-status[data-state="pending"] {
+  color: #4f5255;
+}
+
+.comment-status[data-state="success"] {
+  color: #2e7d32;
+}
+
+.comment-status[data-state="error"] {
+  color: #c9190b;
 }
 
 .comment-list {
@@ -1471,6 +1575,19 @@ footer {
 
   .engagement-controls {
     align-items: stretch;
+  }
+
+  .share-actions .share-btn {
+    min-width: 0;
+    flex: 1 1 10rem;
+  }
+
+  .comment-form-meta {
+    align-items: stretch;
+  }
+
+  .comment-form-meta .comment-submit {
+    width: 100%;
   }
 }
 
