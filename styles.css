@@ -579,6 +579,20 @@ section {
   margin-top: 0;
 }
 
+.membership-link,
+.membership-link:visited {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.membership-link:hover,
+.membership-link:focus-visible {
+  color: var(--accent-deep);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 .stats-grid {
   margin-top: 1.2rem;
   display: grid;
