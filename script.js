@@ -517,6 +517,139 @@ if (
 
   attachShareHandlers(shareSection);
 
+  const estimateReadMinutes = (node) => {
+    const text = String(node?.textContent || "")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!text) return 1;
+    const words = text.split(" ").filter(Boolean).length;
+    return Math.max(1, Math.round(words / 220));
+  };
+
+  const formatUpdatedLabel = () => {
+    const parsed = new Date(document.lastModified);
+    if (Number.isNaN(parsed.getTime())) return "";
+    return parsed.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+
+  const createDetailMeta = () => {
+    if (!firstPanel) return null;
+
+    const readSource = isBlogPostPage
+      ? contentHost.querySelector(".blog-post")
+      : firstPanel;
+    const readMinutes = estimateReadMinutes(readSource || firstPanel);
+    const updatedLabel = formatUpdatedLabel();
+
+    const meta = document.createElement("div");
+    meta.className = "detail-meta";
+    meta.innerHTML = `
+      <span class="detail-meta-item">${readMinutes} min read</span>
+      ${updatedLabel ? `<span class="detail-meta-item">Updated ${updatedLabel}</span>` : ""}
+      <button type="button" class="detail-meta-link" data-jump-comments>Comments</button>
+    `;
+
+    const jumpButton = meta.querySelector("[data-jump-comments]");
+    if (jumpButton) {
+      jumpButton.addEventListener("click", () => {
+        const target = contentHost.querySelector("[data-engagement='true']");
+        if (!target) return;
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (shareSection.nextSibling) {
+      firstPanel.insertBefore(meta, shareSection.nextSibling);
+    } else {
+      firstPanel.appendChild(meta);
+    }
+
+    return meta;
+  };
+
+  const buildTableOfContents = () => {
+    if (!firstPanel) return;
+
+    const selector = isBlogPostPage
+      ? ".blog-post h2, .blog-post h3"
+      : ".panel h2, .panel h3";
+
+    const headings = Array.from(contentHost.querySelectorAll(selector)).filter((heading) => {
+      if (!(heading instanceof HTMLElement)) return false;
+      if (!heading.textContent || !heading.textContent.trim()) return false;
+      if (heading.closest(".article-nav")) return false;
+      if (heading.closest(".share-panel")) return false;
+      return true;
+    });
+
+    if (headings.length < 3) return;
+
+    const usedIds = new Set(
+      Array.from(document.querySelectorAll("[id]"))
+        .map((el) => el.id)
+        .filter(Boolean)
+    );
+
+    const toIdBase = (text, index) => {
+      const base = text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      return base || `${pageSlug}-section-${index + 1}`;
+    };
+
+    const tocItems = headings.map((heading, index) => {
+      let id = heading.id || "";
+      if (!id) {
+        const base = toIdBase(heading.textContent || "", index);
+        id = base;
+        let suffix = 2;
+        while (usedIds.has(id)) {
+          id = `${base}-${suffix}`;
+          suffix += 1;
+        }
+        heading.id = id;
+      }
+      usedIds.add(id);
+      return {
+        id,
+        level: heading.tagName.toLowerCase(),
+        label: (heading.textContent || "").trim()
+      };
+    });
+
+    const toc = document.createElement("nav");
+    toc.className = "reveal toc-panel";
+    toc.setAttribute("aria-label", "On this page");
+    toc.innerHTML = `
+      <p class="toc-title">On this page</p>
+      <ol class="toc-list">
+        ${tocItems
+          .map(
+            (item) => `
+              <li class="toc-item ${item.level === "h3" ? "toc-item-h3" : ""}">
+                <a href="#${item.id}">${item.label}</a>
+              </li>
+            `
+          )
+          .join("")}
+      </ol>
+    `;
+
+    if (shareSection.nextSibling) {
+      firstPanel.insertBefore(toc, shareSection.nextSibling);
+    } else {
+      firstPanel.appendChild(toc);
+    }
+  };
+
+  createDetailMeta();
+  buildTableOfContents();
+
   const sanitizeState = (rawState) => {
     const safeState = { ...storageFallback };
     if (!rawState || typeof rawState !== "object") return safeState;
@@ -628,6 +761,7 @@ if (
 
   const engagementSection = document.createElement("section");
   engagementSection.className = "panel reveal engagement-panel";
+  engagementSection.id = "comments";
   engagementSection.setAttribute("data-engagement", "true");
   engagementSection.innerHTML = `
     <h2>Reflections & Comments</h2>
