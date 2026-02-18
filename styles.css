@@ -594,11 +594,13 @@ section {
 }
 
 #certifications .mini-panel {
-  padding: 1.05rem;
+  padding: 1rem;
 }
 
 #certifications .mini-panel h3 {
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.65rem;
+  font-size: 1.02rem;
+  font-weight: 700;
 }
 
 #certifications .mini-panel > ul:not(.membership-list) {
@@ -611,9 +613,9 @@ section {
 }
 
 #certifications .mini-panel > ul:not(.membership-list) li {
-  padding: 0.56rem 0;
+  padding: 0.5rem 0;
   border-bottom: 1px solid #e6e6e6;
-  line-height: 1.45;
+  line-height: 1.35;
 }
 
 #certifications .mini-panel > ul:not(.membership-list) li:last-child {
@@ -621,28 +623,47 @@ section {
 }
 
 #certifications .mini-panel p {
-  margin: 0.92rem 0 0.46rem;
+  margin: 0.8rem 0 0.42rem;
+  font-size: 0.96rem;
+  font-weight: 700;
 }
 
 #certifications .membership-list {
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
 }
 
 #certifications .credential-title {
   color: var(--ink);
-  font-weight: 800;
+  display: block;
+  font-size: 0.97rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+#certifications .credential-inline-line {
+  display: block;
+  margin-top: 0.12rem;
+  font-size: 0.9rem;
+  color: #3f4348;
 }
 
 #certifications .credential-inline-accent {
   color: var(--accent-deep);
   font-weight: 700;
-  white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 #certifications .credential-inline-meta {
+  display: block;
+  margin-top: 0.12rem;
   color: var(--muted);
-  font-weight: 600;
-  white-space: nowrap;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+#certifications > h2 {
+  margin-bottom: 0.85rem;
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
 }
 
 .stats-grid {
