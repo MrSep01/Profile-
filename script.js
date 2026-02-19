@@ -371,6 +371,7 @@ if (
     pageSlug.startsWith("scavenger-") ||
     pageSlug.startsWith("intasc-video-") ||
     pageSlug.startsWith("portfolio-");
+  const hasBlogStylePost = Boolean(engagementRoot.querySelector(".blog-post"));
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sepehr Massoumi Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
@@ -406,7 +407,7 @@ if (
   let turnstileToken = "";
 
   document.body.classList.add("detail-page");
-  if (isBlogPostPage) document.body.classList.add("detail-page-blog");
+  if (isBlogPostPage || hasBlogStylePost) document.body.classList.add("detail-page-blog");
   if (isPortfolioContentPage) document.body.classList.add("detail-page-portfolio");
 
   const detailStack = document.createElement("div");
@@ -556,7 +557,7 @@ if (
   const createDetailMeta = () => {
     if (!firstPanel) return null;
 
-    const readSource = isBlogPostPage
+    const readSource = hasBlogStylePost
       ? contentHost.querySelector(".blog-post")
       : firstPanel;
     const readMinutes = estimateReadMinutes(readSource || firstPanel);
@@ -591,7 +592,7 @@ if (
   const buildTableOfContents = () => {
     if (!firstPanel) return;
 
-    const selector = isBlogPostPage
+    const selector = hasBlogStylePost
       ? ".blog-post h2, .blog-post h3"
       : ".panel h2, .panel h3";
 
@@ -668,7 +669,7 @@ if (
       </ol>
     `;
 
-    if (isBlogPostPage && detailRail) {
+    if (hasBlogStylePost && detailRail) {
       detailRail.appendChild(toc);
       return;
     }
