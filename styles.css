@@ -579,37 +579,48 @@ section {
   background: #f8fbff;
   border-color: #d8e2ef;
   padding: 1.05rem 1.1rem;
+  display: grid;
+  gap: 0.5rem;
 }
 
 .summary-kicker {
-  margin: 0 0 0.4rem;
+  margin: 0;
   color: var(--accent-deep);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.76rem;
+  letter-spacing: 0.055em;
+  font-size: 0.74rem;
   font-weight: 700;
 }
 
 .summary-narrative-panel h3 {
-  margin-bottom: 0.65rem;
-  font-size: 1.33rem;
-  line-height: 1.23;
-  letter-spacing: -0.012em;
+  margin: 0 0 0.22rem;
+  font-size: clamp(1.34rem, 1.48vw, 1.56rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+  color: var(--ink);
 }
 
 .summary-line {
   margin: 0;
-  color: var(--muted);
-  line-height: 1.58;
+  color: #43484e;
+  line-height: 1.68;
+  font-size: 1rem;
+  font-weight: 420;
 }
 
 .summary-line + .summary-line {
-  margin-top: 0.42rem;
+  margin-top: 0.16rem;
 }
 
-.summary-line strong {
+.summary-line-label {
   color: var(--ink);
-  font-weight: 700;
+  font-weight: 640;
+  margin-right: 0.18rem;
+}
+
+.summary-line-label::after {
+  content: ":";
 }
 
 .profile-panel {
@@ -3202,7 +3213,7 @@ footer {
   }
 
   .summary-narrative-panel h3 {
-    font-size: 1.21rem;
+    font-size: 1.26rem;
   }
 
   .profile-tiles {
@@ -3224,7 +3235,14 @@ footer {
   }
 
   .summary-line {
-    font-size: 0.95rem;
+    font-size: 0.96rem;
+    line-height: 1.62;
+  }
+
+  .summary-line-label {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0.04rem;
   }
 
   .profile-panel,
