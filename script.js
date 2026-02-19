@@ -367,14 +367,13 @@ if (
 ) {
   const pageSlug = getPageFilename();
   const isBlogPostPage = pageSlug.startsWith("blog-") && !pageSlug.startsWith("blog-category-");
-  const isVideoDetailPage = pageSlug.startsWith("intasc-video-");
   const isPortfolioContentPage =
     pageSlug.startsWith("scavenger-") ||
     pageSlug.startsWith("intasc-video-") ||
     pageSlug.startsWith("portfolio-");
   const hasBlogStylePost = Boolean(engagementRoot.querySelector(".blog-post"));
   const useBlogDetailUtilities = isBlogPostPage || hasBlogStylePost;
-  const shouldRenderShare = !isVideoDetailPage;
+  const shouldRenderShare = true;
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sep Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
@@ -462,7 +461,7 @@ if (
 
   let shareSection = null;
   const firstPanel = contentHost.querySelector(".panel");
-  if (shouldRenderShare && useBlogDetailUtilities) {
+  if (shouldRenderShare) {
     shareSection = createShareSection("top");
     if (firstPanel) {
       firstPanel.prepend(shareSection);
@@ -470,7 +469,6 @@ if (
       contentHost.appendChild(shareSection);
     }
   }
-  const shareBottomSection = shouldRenderShare ? createShareSection("bottom") : null;
 
   const buildShareLink = (platform) => {
     const url = encodeURIComponent(pageUrl);
@@ -541,10 +539,6 @@ if (
   if (shareSection) {
     attachShareHandlers(shareSection);
   }
-  if (shareBottomSection) {
-    attachShareHandlers(shareBottomSection);
-  }
-
   const estimateReadMinutes = (node) => {
     const text = String(node?.textContent || "")
       .replace(/\s+/g, " ")
@@ -590,12 +584,11 @@ if (
       });
     }
 
-    if (shareSection && shareSection.nextSibling) {
-      firstPanel.insertBefore(meta, shareSection.nextSibling);
-    } else if (firstPanel.firstChild) {
-      firstPanel.insertBefore(meta, firstPanel.firstChild.nextSibling);
+    const firstHeading = firstPanel.querySelector("h1, h2");
+    if (firstHeading && firstHeading.parentElement === firstPanel) {
+      firstHeading.insertAdjacentElement("afterend", meta);
     } else {
-      firstPanel.appendChild(meta);
+      firstPanel.prepend(meta);
     }
 
     return meta;
@@ -681,16 +674,12 @@ if (
       </ol>
     `;
 
-    if (hasBlogStylePost && detailRail) {
+    if (detailRail) {
       detailRail.appendChild(toc);
       return;
     }
 
-    if (shareSection && shareSection.nextSibling) {
-      firstPanel.insertBefore(toc, shareSection.nextSibling);
-    } else {
-      firstPanel.appendChild(toc);
-    }
+    firstPanel.appendChild(toc);
 
     const tocLinks = Array.from(toc.querySelectorAll(".toc-item a")).filter(
       (link) => link instanceof HTMLAnchorElement
@@ -941,9 +930,6 @@ if (
     </div>
   `;
 
-  if (shareBottomSection) {
-    contentHost.appendChild(shareBottomSection);
-  }
   contentHost.appendChild(engagementSection);
 
   const likeButton = engagementSection.querySelector("[data-like-button]");

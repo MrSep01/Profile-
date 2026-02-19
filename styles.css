@@ -1438,17 +1438,17 @@ body.detail-page-blog .post-figure {
   background: transparent;
   box-shadow: none;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   gap: 0.55rem;
-  width: fit-content;
-  margin-left: auto;
+  width: 100%;
+  margin-left: 0;
 }
 
 .share-panel-top {
-  position: sticky;
-  top: 5.2rem;
-  z-index: 4;
+  position: static;
+  top: auto;
+  z-index: auto;
   margin: 0 0 0.9rem;
 }
 
@@ -1490,7 +1490,7 @@ body.detail-page-blog .post-figure {
 .share-actions-icons {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 0.45rem;
 }
 
