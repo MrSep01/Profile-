@@ -608,24 +608,33 @@ section {
   background: #ffffff;
 }
 
-.leadership-tile-curriculum {
+.leadership-tile-rigor {
   background: #f8fbff;
   border-color: #d4deea;
 }
 
-.leadership-tile-assessment {
+.leadership-tile-standards {
   background: #f8fcfa;
   border-color: #d4e3da;
 }
 
-.leadership-tile-lab {
+.leadership-tile-assessment {
   background: #fffaf9;
   border-color: #eadcd6;
 }
 
-.leadership-tile-impact {
+.leadership-tile-practical {
   background: #fff8f8;
   border-color: #e8d8d8;
+}
+
+.leadership-tile-collaborative {
+  background: #f9f8ff;
+  border-color: #dfdaeb;
+}
+
+.leadership-tile-full {
+  grid-column: 1 / -1;
 }
 
 .summary-narrative-panel .leadership-label {
