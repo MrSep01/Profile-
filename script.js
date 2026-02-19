@@ -373,7 +373,7 @@ if (
     pageSlug.startsWith("portfolio-");
   const hasBlogStylePost = Boolean(engagementRoot.querySelector(".blog-post"));
   const pageUrl = window.location.href.split("#")[0];
-  const pageTitle = document.title || "Sepehr Massoumi Alamouti";
+  const pageTitle = document.title || "Sep Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
   const likedKey = `teaching-liked-v1:${pageSlug}`;
   const sortKey = `teaching-comment-sort-v1:${pageSlug}`;

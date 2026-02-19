@@ -1,6 +1,6 @@
-# Sepehr Portfolio Site
+# Sep Portfolio Site
 
-Production portfolio site for **Sepehr Massoumi Alamouti**, deployed via GitHub Pages.
+Production portfolio site for **Sep Alamouti**, deployed via GitHub Pages.
 
 ## Main Files
 
