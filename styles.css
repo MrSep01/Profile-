@@ -575,9 +575,39 @@ section {
   color: var(--ink);
 }
 
+#certifications .credentials-layout {
+  margin-top: 1.1rem;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#certifications .memberships-panel {
+  grid-column: 1 / -1;
+}
+
+#certifications .mini-panel {
+  padding: 1.15rem;
+}
+
+#certifications .academic-panel {
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.95), rgba(235, 245, 255, 0.72));
+  border-color: rgba(95, 143, 205, 0.3);
+}
+
+#certifications .certifications-panel {
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.95), rgba(236, 250, 247, 0.75));
+  border-color: rgba(96, 154, 126, 0.3);
+}
+
+#certifications .memberships-panel {
+  background: linear-gradient(170deg, rgba(255, 255, 255, 0.96), rgba(255, 241, 241, 0.8));
+  border-color: rgba(201, 25, 11, 0.26);
+}
+
 .membership-marquee {
-  margin-top: 0.2rem;
-  padding: 0.5rem 0;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0;
   overflow: hidden;
   border-top: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
@@ -602,8 +632,8 @@ section {
 }
 
 .membership-logo {
-  min-width: 175px;
-  height: 64px;
+  min-width: 188px;
+  height: 68px;
   padding: 0.7rem 0.9rem;
   border-radius: 0.7rem;
   border: 1px solid rgba(95, 111, 137, 0.2);
@@ -616,7 +646,7 @@ section {
 
 .membership-logo img {
   max-width: 100%;
-  max-height: 32px;
+  max-height: 34px;
   object-fit: contain;
 }
 
@@ -640,13 +670,9 @@ section {
   }
 }
 
-#certifications .mini-panel {
-  padding: 1rem;
-}
-
 #certifications .mini-panel h3 {
-  margin-bottom: 0.65rem;
-  font-size: 1.3rem;
+  margin-bottom: 0.72rem;
+  font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -661,7 +687,7 @@ section {
 }
 
 #certifications .mini-panel > ul:not(.membership-list) li {
-  padding: 0.5rem 0;
+  padding: 0.56rem 0;
   border-bottom: 1px solid #e6e6e6;
   line-height: 1.35;
 }
@@ -670,17 +696,10 @@ section {
   border-bottom: 0;
 }
 
-#certifications .mini-panel .credentials-subheading {
-  margin: 0.9rem 0 0.45rem;
-  font-size: 1.3rem;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
 #certifications .credential-title {
   color: var(--ink);
   display: block;
-  font-size: 0.97rem;
+  font-size: 1.07rem;
   font-weight: 600;
   letter-spacing: 0;
 }
@@ -688,14 +707,14 @@ section {
 #certifications .credential-inline-line {
   display: block;
   margin-top: 0.12rem;
-  font-size: 0.9rem;
+  font-size: 0.98rem;
   color: #3f4348;
 }
 
 #certifications .credential-inline-accent {
   color: var(--accent-deep);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.98rem;
 }
 
 #certifications .credential-inline-meta {
@@ -703,12 +722,12 @@ section {
   margin-top: 0.12rem;
   color: var(--muted);
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: 0.98rem;
 }
 
 #certifications .certifications-panel .credential-title {
   display: inline;
-  font-size: 0.93rem;
+  font-size: 1.03rem;
   white-space: nowrap;
 }
 
@@ -716,7 +735,7 @@ section {
   display: inline;
   margin-top: 0;
   margin-left: 0.28rem;
-  font-size: 0.88rem;
+  font-size: 0.96rem;
   white-space: nowrap;
 }
 
@@ -1936,6 +1955,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  #certifications .credentials-layout {
+    grid-template-columns: 1fr;
+  }
+
   .link-grid,
   .hunt-grid {
     grid-template-columns: 1fr;
@@ -2582,6 +2605,28 @@ footer {
 
   .membership-logo img {
     max-height: 24px;
+  }
+
+  #certifications .mini-panel h3 {
+    font-size: 1.32rem;
+  }
+
+  #certifications .credential-title {
+    font-size: 0.99rem;
+  }
+
+  #certifications .credential-inline-line,
+  #certifications .credential-inline-accent,
+  #certifications .credential-inline-meta {
+    font-size: 0.91rem;
+  }
+
+  #certifications .certifications-panel .credential-title {
+    font-size: 0.95rem;
+  }
+
+  #certifications .certifications-panel .credential-inline-meta {
+    font-size: 0.9rem;
   }
 
   footer {
