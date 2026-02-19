@@ -372,6 +372,7 @@ if (
     pageSlug.startsWith("intasc-video-") ||
     pageSlug.startsWith("portfolio-");
   const hasBlogStylePost = Boolean(engagementRoot.querySelector(".blog-post"));
+  const useBlogDetailUtilities = isBlogPostPage || hasBlogStylePost;
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sep Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
@@ -457,12 +458,15 @@ if (
     return section;
   };
 
-  const shareSection = createShareSection("top");
+  let shareSection = null;
   const firstPanel = contentHost.querySelector(".panel");
-  if (firstPanel) {
-    firstPanel.prepend(shareSection);
-  } else {
-    contentHost.appendChild(shareSection);
+  if (useBlogDetailUtilities) {
+    shareSection = createShareSection("top");
+    if (firstPanel) {
+      firstPanel.prepend(shareSection);
+    } else {
+      contentHost.appendChild(shareSection);
+    }
   }
   const shareBottomSection = createShareSection("bottom");
 
@@ -532,7 +536,9 @@ if (
     });
   };
 
-  attachShareHandlers(shareSection);
+  if (shareSection) {
+    attachShareHandlers(shareSection);
+  }
   attachShareHandlers(shareBottomSection);
 
   const estimateReadMinutes = (node) => {
@@ -555,7 +561,7 @@ if (
   };
 
   const createDetailMeta = () => {
-    if (!firstPanel) return null;
+    if (!firstPanel || !useBlogDetailUtilities) return null;
 
     const readSource = hasBlogStylePost
       ? contentHost.querySelector(".blog-post")
@@ -580,8 +586,10 @@ if (
       });
     }
 
-    if (shareSection.nextSibling) {
+    if (shareSection && shareSection.nextSibling) {
       firstPanel.insertBefore(meta, shareSection.nextSibling);
+    } else if (firstPanel.firstChild) {
+      firstPanel.insertBefore(meta, firstPanel.firstChild.nextSibling);
     } else {
       firstPanel.appendChild(meta);
     }
@@ -590,7 +598,7 @@ if (
   };
 
   const buildTableOfContents = () => {
-    if (!firstPanel) return;
+    if (!firstPanel || !useBlogDetailUtilities) return;
 
     const selector = hasBlogStylePost
       ? ".blog-post h2, .blog-post h3"
@@ -674,7 +682,7 @@ if (
       return;
     }
 
-    if (shareSection.nextSibling) {
+    if (shareSection && shareSection.nextSibling) {
       firstPanel.insertBefore(toc, shareSection.nextSibling);
     } else {
       firstPanel.appendChild(toc);
