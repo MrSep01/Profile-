@@ -25,7 +25,7 @@
       href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260218j" />
+    <link rel="stylesheet" href="styles.css?v=20260219a" />
     <script src="supabase-config.js?v=20260218j"></script>
     <script src="script.js?v=20260218j" defer></script>
   </head>
@@ -390,53 +390,102 @@
               </li>
             </ul>
             <h3 class="credentials-subheading">Professional Memberships</h3>
-            <ul class="membership-list">
-              <li>
-                <a
-                  class="membership-link"
-                  href="https://www.acs.org/"
-                  target="_blank"
-                  rel="noreferrer"
-                  >American Chemical Society</a
-                >
-              </li>
-              <li>
-                <a
-                  class="membership-link"
-                  href="https://www.rsc.org/"
-                  target="_blank"
-                  rel="noreferrer"
-                  >Royal Society of Chemistry</a
-                >
-              </li>
-              <li>
-                <a
-                  class="membership-link"
-                  href="https://www.nsta.org/"
-                  target="_blank"
-                  rel="noreferrer"
-                  >National Science Teaching Association</a
-                >
-              </li>
-              <li>
-                <a
-                  class="membership-link"
-                  href="https://www.pmi.org/"
-                  target="_blank"
-                  rel="noreferrer"
-                  >Project Management Institute (PMI)</a
-                >
-              </li>
-              <li>
-                <a
-                  class="membership-link"
-                  href="https://www.developermarketingalliance.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  >Developer Marketing Alliance</a
-                >
-              </li>
-            </ul>
+            <div
+              class="membership-marquee"
+              role="region"
+              aria-label="Professional membership logos"
+            >
+              <div class="membership-marquee-track">
+                <div class="membership-logo-set">
+                  <a
+                    class="membership-logo"
+                    href="https://www.acs.org/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="American Chemical Society"
+                  >
+                    <img
+                      src="assets/memberships/acs.svg"
+                      alt="American Chemical Society logo"
+                      loading="lazy"
+                    />
+                  </a>
+                  <a
+                    class="membership-logo"
+                    href="https://www.rsc.org/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Royal Society of Chemistry"
+                  >
+                    <img
+                      src="assets/memberships/rsc.svg"
+                      alt="Royal Society of Chemistry logo"
+                      loading="lazy"
+                    />
+                  </a>
+                  <a
+                    class="membership-logo"
+                    href="https://www.nsta.org/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="National Science Teaching Association"
+                  >
+                    <img
+                      src="assets/memberships/nsta.svg"
+                      alt="National Science Teaching Association logo"
+                      loading="lazy"
+                    />
+                  </a>
+                  <a
+                    class="membership-logo"
+                    href="https://www.pmi.org/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Project Management Institute"
+                  >
+                    <img
+                      src="assets/memberships/pmi.jpg"
+                      alt="Project Management Institute logo"
+                      loading="lazy"
+                    />
+                  </a>
+                  <a
+                    class="membership-logo"
+                    href="https://www.developermarketingalliance.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Developer Marketing Alliance"
+                  >
+                    <img
+                      src="assets/memberships/dma.svg"
+                      alt="Developer Marketing Alliance logo"
+                      loading="lazy"
+                    />
+                  </a>
+                </div>
+                <div class="membership-logo-set" aria-hidden="true">
+                  <a class="membership-logo" href="https://www.acs.org/" tabindex="-1">
+                    <img src="assets/memberships/acs.svg" alt="" loading="lazy" />
+                  </a>
+                  <a class="membership-logo" href="https://www.rsc.org/" tabindex="-1">
+                    <img src="assets/memberships/rsc.svg" alt="" loading="lazy" />
+                  </a>
+                  <a class="membership-logo" href="https://www.nsta.org/" tabindex="-1">
+                    <img src="assets/memberships/nsta.svg" alt="" loading="lazy" />
+                  </a>
+                  <a class="membership-logo" href="https://www.pmi.org/" tabindex="-1">
+                    <img src="assets/memberships/pmi.jpg" alt="" loading="lazy" />
+                  </a>
+                  <a
+                    class="membership-logo"
+                    href="https://www.developermarketingalliance.com/"
+                    tabindex="-1"
+                  >
+                    <img src="assets/memberships/dma.svg" alt="" loading="lazy" />
+                  </a>
+                </div>
+              </div>
+            </div>
           </article>
         </div>
       </section>

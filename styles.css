@@ -575,22 +575,69 @@ section {
   color: var(--ink);
 }
 
-.mini-panel .membership-list {
-  margin-top: 0;
+.membership-marquee {
+  margin-top: 0.2rem;
+  padding: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 
-.membership-link,
-.membership-link:visited {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 600;
+.membership-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 0.7rem;
+  animation: memberships-slide-right 34s linear infinite;
+  transform: translateX(calc(-50% - 0.35rem));
 }
 
-.membership-link:hover,
-.membership-link:focus-visible {
-  color: var(--accent-deep);
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
+.membership-logo-set {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.membership-logo-set[aria-hidden="true"] .membership-logo {
+  pointer-events: none;
+}
+
+.membership-logo {
+  min-width: 175px;
+  height: 64px;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.7rem;
+  border: 1px solid rgba(95, 111, 137, 0.2);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.membership-logo img {
+  max-width: 100%;
+  max-height: 32px;
+  object-fit: contain;
+}
+
+.membership-logo:hover,
+.membership-logo:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(10, 15, 22, 0.09);
+}
+
+.membership-marquee:hover .membership-marquee-track,
+.membership-marquee:focus-within .membership-marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes memberships-slide-right {
+  from {
+    transform: translateX(calc(-50% - 0.35rem));
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 #certifications .mini-panel {
@@ -628,10 +675,6 @@ section {
   font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.2;
-}
-
-#certifications .membership-list {
-  margin-top: 0.1rem;
 }
 
 #certifications .credential-title {
@@ -2495,6 +2538,16 @@ footer {
   .hero-card img {
     height: 320px;
   }
+
+  .membership-logo {
+    min-width: 162px;
+    height: 60px;
+    padding: 0.62rem 0.78rem;
+  }
+
+  .membership-logo img {
+    max-height: 28px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2514,8 +2567,44 @@ footer {
     margin-left: 0;
   }
 
+  .membership-marquee {
+    border-left: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    border-radius: 0.7rem;
+    padding: 0.55rem 0;
+  }
+
+  .membership-logo {
+    min-width: 146px;
+    height: 56px;
+    padding: 0.55rem 0.62rem;
+  }
+
+  .membership-logo img {
+    max-height: 24px;
+  }
+
   footer {
     padding: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .membership-marquee-track {
+    animation: none;
+    transform: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .membership-logo-set {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .membership-logo-set[aria-hidden="true"] {
+    display: none;
   }
 }
 
