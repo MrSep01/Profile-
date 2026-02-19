@@ -588,13 +588,13 @@ section {
   height: 100%;
 }
 
-.summary-kicker {
+.summary-narrative-panel > .summary-kicker {
   margin: 0;
   color: var(--accent-deep);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.93rem;
-  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: 0.98rem;
+  font-weight: 620;
 }
 
 .leadership-tiles {
@@ -628,24 +628,32 @@ section {
   border-color: #e8d8d8;
 }
 
-.leadership-label {
+.summary-narrative-panel .leadership-label {
   margin: 0;
   color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.045em;
-  font-size: 0.92rem;
-  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  font-size: 0.98rem;
+  font-weight: 620;
 }
 
-.leadership-text {
+.summary-narrative-panel .leadership-text {
   margin: 0;
   color: #454b52;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   line-height: 1.46;
-  font-weight: 500;
+  font-weight: 430;
 }
 
-.summary-narrative-panel h3,
+.summary-narrative-panel h3 {
+  margin: 0 0 0.28rem;
+  font-size: clamp(1.36rem, 1.3vw, 1.52rem);
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  font-weight: 650;
+  color: var(--ink);
+}
+
 .profile-panel h3 {
   margin: 0 0 0.28rem;
   font-size: clamp(1.62rem, 1.7vw, 1.86rem);
@@ -3264,7 +3272,10 @@ footer {
     padding: 1rem;
   }
 
-  .summary-narrative-panel h3,
+  .summary-narrative-panel h3 {
+    font-size: 1.32rem;
+  }
+
   .profile-panel h3 {
     font-size: 1.48rem;
   }
@@ -3296,12 +3307,20 @@ footer {
     line-height: 1.66;
   }
 
-  .leadership-label {
-    font-size: 0.84rem;
+  .summary-narrative-panel h3 {
+    font-size: 1.24rem;
   }
 
-  .leadership-text {
-    font-size: 0.98rem;
+  .profile-panel h3 {
+    font-size: 1.36rem;
+  }
+
+  .summary-narrative-panel .leadership-label {
+    font-size: 0.88rem;
+  }
+
+  .summary-narrative-panel .leadership-text {
+    font-size: 0.94rem;
     line-height: 1.42;
   }
 
