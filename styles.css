@@ -224,6 +224,35 @@ h2 {
   padding: 1.1rem;
 }
 
+.hero-profile-meta {
+  margin-top: 0.75rem;
+  padding-top: 0.72rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.46rem;
+}
+
+.hero-profile-meta-item {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.hero-profile-meta-label {
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.hero-profile-meta-value {
+  color: var(--ink);
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
 .label {
   margin: 0;
   color: var(--muted);
@@ -546,6 +575,10 @@ section {
 
 .about-summary-layout {
   align-items: stretch;
+}
+
+.about-single-column {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .mini-panel {
@@ -3198,6 +3231,11 @@ footer {
 .home-page #about .mini-panel:last-child {
   background: #fffaf9;
   border-color: #ebddd6;
+}
+
+.home-page #about .about-single-column .mini-panel {
+  background: #f8fbff;
+  border-color: #d8e2ef;
 }
 
 .home-page #subjects .subject-card:nth-child(1) {
