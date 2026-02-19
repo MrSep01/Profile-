@@ -1131,6 +1131,91 @@ section {
   margin-bottom: 0.4rem;
 }
 
+.skills-intro {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  max-width: 72ch;
+}
+
+.skills-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.skill-card {
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--accent);
+  border-radius: 0.32rem;
+  padding: 0.98rem 1rem;
+  background: #ffffff;
+  box-shadow: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.skill-card:hover,
+.skill-card:focus-within {
+  border-color: #cfd6de;
+  box-shadow: 0 8px 16px rgba(10, 15, 22, 0.05);
+  transform: translateY(-1px);
+}
+
+.skill-card-curriculum {
+  border-top-color: #5f8fcd;
+  background: #f8fbff;
+}
+
+.skill-card-lab {
+  border-top-color: #609a7e;
+  background: #f8fcfa;
+}
+
+.skill-card-tech {
+  border-top-color: #c9190b;
+  background: #fff9f8;
+}
+
+.skill-kicker {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.skill-card h3 {
+  margin: 0.28rem 0 0.52rem;
+  font-size: 1.2rem;
+  line-height: 1.26;
+}
+
+.skill-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.skill-points li {
+  position: relative;
+  padding-left: 1rem;
+  color: #3f444a;
+  line-height: 1.42;
+}
+
+.skill-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52rem;
+  width: 0.36rem;
+  height: 0.36rem;
+  border-radius: 999px;
+  background: var(--accent-deep);
+}
+
 .video-grid {
   margin-top: 1rem;
   display: grid;
@@ -2268,7 +2353,8 @@ footer {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .subject-grid {
+  .subject-grid,
+  .skills-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3233,6 +3319,7 @@ footer {
 
 .home-page #about .mini-panel,
 .home-page #subjects .subject-card,
+.home-page #subjects .skill-card,
 .home-page .featured-primary,
 .home-page .featured-metric,
 .home-page .resource-card,
@@ -3257,17 +3344,20 @@ footer {
   border-color: #d8e2ef;
 }
 
-.home-page #subjects .subject-card:nth-child(1) {
+.home-page #subjects .subject-card:nth-child(1),
+.home-page #subjects .skill-card-curriculum {
   background: #f8fbff;
   border-color: #d4dde9;
 }
 
-.home-page #subjects .subject-card:nth-child(2) {
+.home-page #subjects .subject-card:nth-child(2),
+.home-page #subjects .skill-card-lab {
   background: #f8fcfa;
   border-color: #d3e1da;
 }
 
-.home-page #subjects .subject-card:nth-child(3) {
+.home-page #subjects .subject-card:nth-child(3),
+.home-page #subjects .skill-card-tech {
   background: #fffaf8;
   border-color: #eaded6;
 }
