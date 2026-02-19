@@ -367,12 +367,14 @@ if (
 ) {
   const pageSlug = getPageFilename();
   const isBlogPostPage = pageSlug.startsWith("blog-") && !pageSlug.startsWith("blog-category-");
+  const isVideoDetailPage = pageSlug.startsWith("intasc-video-");
   const isPortfolioContentPage =
     pageSlug.startsWith("scavenger-") ||
     pageSlug.startsWith("intasc-video-") ||
     pageSlug.startsWith("portfolio-");
   const hasBlogStylePost = Boolean(engagementRoot.querySelector(".blog-post"));
   const useBlogDetailUtilities = isBlogPostPage || hasBlogStylePost;
+  const shouldRenderShare = !isVideoDetailPage;
   const pageUrl = window.location.href.split("#")[0];
   const pageTitle = document.title || "Sep Alamouti";
   const storageKey = `teaching-engagement-v1:${pageSlug}`;
@@ -460,7 +462,7 @@ if (
 
   let shareSection = null;
   const firstPanel = contentHost.querySelector(".panel");
-  if (useBlogDetailUtilities) {
+  if (shouldRenderShare && useBlogDetailUtilities) {
     shareSection = createShareSection("top");
     if (firstPanel) {
       firstPanel.prepend(shareSection);
@@ -468,7 +470,7 @@ if (
       contentHost.appendChild(shareSection);
     }
   }
-  const shareBottomSection = createShareSection("bottom");
+  const shareBottomSection = shouldRenderShare ? createShareSection("bottom") : null;
 
   const buildShareLink = (platform) => {
     const url = encodeURIComponent(pageUrl);
@@ -539,7 +541,9 @@ if (
   if (shareSection) {
     attachShareHandlers(shareSection);
   }
-  attachShareHandlers(shareBottomSection);
+  if (shareBottomSection) {
+    attachShareHandlers(shareBottomSection);
+  }
 
   const estimateReadMinutes = (node) => {
     const text = String(node?.textContent || "")
@@ -937,7 +941,9 @@ if (
     </div>
   `;
 
-  contentHost.appendChild(shareBottomSection);
+  if (shareBottomSection) {
+    contentHost.appendChild(shareBottomSection);
+  }
   contentHost.appendChild(engagementSection);
 
   const likeButton = engagementSection.querySelector("[data-like-button]");
