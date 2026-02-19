@@ -918,7 +918,7 @@ section {
 
 #certifications .certifications-panel .credential-title {
   display: inline;
-  font-size: 1.03rem;
+  font-size: 1.07rem;
   white-space: nowrap;
 }
 
@@ -926,7 +926,7 @@ section {
   display: inline;
   margin-top: 0;
   margin-left: 0.28rem;
-  font-size: 0.96rem;
+  font-size: 0.98rem;
   white-space: nowrap;
 }
 
@@ -2815,11 +2815,11 @@ footer {
   }
 
   #certifications .certifications-panel .credential-title {
-    font-size: 0.95rem;
+    font-size: 0.99rem;
   }
 
   #certifications .certifications-panel .credential-inline-meta {
-    font-size: 0.9rem;
+    font-size: 0.91rem;
   }
 
   footer {
