@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 116" role="img" aria-labelledby="title desc">
+  <title id="title">Developer Marketing Alliance logo</title>
+  <desc id="desc">DMA wordmark with red capsule icon and black text.</desc>
+  <rect x="0" y="16" width="100" height="84" rx="42" fill="#ff5a5f"/>
+  <text
+    x="50"
+    y="69"
+    text-anchor="middle"
+    fill="#ffffff"
+    font-family="Red Hat Display, Red Hat Text, Segoe UI, Arial, sans-serif"
+    font-size="46"
+    font-weight="800"
+    letter-spacing="-1.2"
+  >
+    dma
+  </text>
+  <text
+    x="112"
+    y="57"
+    fill="#101820"
+    font-family="Red Hat Display, Red Hat Text, Segoe UI, Arial, sans-serif"
+    font-size="22"
+    font-weight="700"
+  >
+    Developer Marketing
+  </text>
+  <text
+    x="112"
+    y="87"
+    fill="#101820"
+    font-family="Red Hat Display, Red Hat Text, Segoe UI, Arial, sans-serif"
+    font-size="22"
+    font-weight="700"
+  >
+    Alliance
+  </text>
+</svg>
