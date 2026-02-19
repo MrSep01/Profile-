@@ -575,6 +575,63 @@ section {
   color: var(--ink);
 }
 
+.profile-panel {
+  background: #fffaf9;
+  border-color: #ebddd6;
+}
+
+.profile-facts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.profile-facts li {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.62rem 0.68rem;
+  border: 1px solid var(--line);
+  border-radius: 0.2rem;
+  background: #ffffff;
+}
+
+.profile-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  fill: var(--accent-deep);
+  flex: 0 0 auto;
+}
+
+.profile-meta {
+  display: grid;
+  gap: 0.02rem;
+}
+
+.profile-label {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+
+.profile-value {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.profile-note {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+}
+
 #certifications .credentials-layout {
   margin-top: 1.1rem;
   display: grid;
@@ -2831,7 +2888,8 @@ footer {
 }
 
 .home-page #about .mini-panel:last-child {
-  background: #fcfcfc;
+  background: #fffaf9;
+  border-color: #ebddd6;
 }
 
 .home-page #subjects .subject-card:nth-child(1) {

@@ -25,7 +25,7 @@
       href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800&family=Red+Hat+Text:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css?v=20260219b" />
+    <link rel="stylesheet" href="styles.css?v=20260219c" />
     <script src="supabase-config.js?v=20260218j"></script>
     <script src="script.js?v=20260218j" defer></script>
   </head>
@@ -106,15 +106,38 @@
               </li>
             </ul>
           </article>
-          <article class="mini-panel">
-            <h3>Personal Details</h3>
-            <ul>
-              <li>Nationality: Canadian</li>
-              <li>Age: 47</li>
-              <li>Location: Bangkok, Thailand</li>
-              <li>WeChat: MRSEP2025</li>
-              <li>LINE: seephralamouti</li>
+          <article class="mini-panel profile-panel">
+            <h3>Professional Snapshot</h3>
+            <ul class="profile-facts">
+              <li>
+                <svg class="profile-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2v10h14V7H5zm2.6 5a2.4 2.4 0 1 1 4.8 0 2.4 2.4 0 0 1-4.8 0zm7.1 2.8a3.6 3.6 0 0 0-6.2 0H6.7v1.5h10.6v-1.5h-2.6z" />
+                </svg>
+                <span class="profile-meta">
+                  <span class="profile-label">Nationality</span>
+                  <span class="profile-value">Canadian</span>
+                </span>
+              </li>
+              <li>
+                <svg class="profile-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 2h2v2h6V2h2v2h2a2 2 0 0 1 2 2v13a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2h2V2zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9zM8 13h3v3H8v-3z" />
+                </svg>
+                <span class="profile-meta">
+                  <span class="profile-label">Age</span>
+                  <span class="profile-value">47</span>
+                </span>
+              </li>
+              <li>
+                <svg class="profile-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7zm0 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
+                </svg>
+                <span class="profile-meta">
+                  <span class="profile-label">Location</span>
+                  <span class="profile-value">Bangkok, Thailand</span>
+                </span>
+              </li>
             </ul>
+            <p class="profile-note">International classroom impact across Thailand, China, and Canada.</p>
           </article>
         </div>
 
@@ -554,6 +577,12 @@
             <a class="contact-icon-link" href="https://github.com/mrsep01" target="_blank" rel="noreferrer" aria-label="GitHub profile"
               ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.5 2 2 6.6 2 12.2c0 4.5 2.9 8.3 6.9 9.7.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1-1.4-1-1.4-.9-.6 0-.6 0-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.7-1.3-2.2-.2-4.5-1.1-4.5-5 0-1.1.4-2 1-2.8-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1.1a9.5 9.5 0 0 1 5 0c1.9-1.4 2.8-1.1 2.8-1.1.5 1.4.2 2.5.1 2.7.6.8 1 1.7 1 2.8 0 3.9-2.3 4.8-4.6 5 .4.3.7 1 .7 2v3c0 .3.2.6.7.5 4-1.4 6.9-5.2 6.9-9.7C22 6.6 17.5 2 12 2z"/></svg><span class="sr-only">GitHub</span></a
             >
+            <a class="contact-icon-link" href="https://web.wechat.com/" target="_blank" rel="noreferrer" aria-label="WeChat ID MRSEP2025"
+              ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.6 4C5.4 4 2 6.8 2 10.3c0 2 1.1 3.8 2.9 5l-.8 2.5 2.8-1.4c.9.2 1.8.4 2.7.4 4.2 0 7.6-2.8 7.6-6.3S13.8 4 9.6 4zm-2.3 7.2a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4.7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM16 9.2c-3.3 0-6 2.2-6 4.9S12.7 19 16 19c.7 0 1.4-.1 2-.3l2.2 1.1-.6-1.9c1.1-.9 1.8-2.2 1.8-3.7 0-2.7-2.7-5-6-5zm-1.8 6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm3.6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6z"/></svg><span class="sr-only">WeChat</span></a
+            >
+            <a class="contact-icon-link" href="https://line.me/R/ti/p/~seephralamouti" target="_blank" rel="noreferrer" aria-label="LINE ID seephralamouti"
+              ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.7 2 11.2c0 4 3.6 7.3 8.3 7.9l-.3 2.3c0 .2.2.4.4.3l2.9-2.1h.7c4.4 0 8-3.2 8-7.2C22 6.9 17.5 3 12 3zm-3 9.5h-2v-3h1v2h1v1zm2.7 0h-1v-3h1v3zm3.4 0h-2.2v-3h1v2h1.2v1zm2.9-2h-1.1v.5h1v1h-1V13h-1v-3h2.1v1z"/></svg><span class="sr-only">LINE</span></a
+            >
           </div>
         </div>
         <form
@@ -621,6 +650,14 @@
         <a class="social-icon" href="tel:+660645585241" aria-label="Phone">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.62 10.79a15.4 15.4 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.1.37 2.3.57 3.54.57a1 1 0 0 1 1 1V21a1 1 0 0 1-1 1C9.85 22 2 14.15 2 4a1 1 0 0 1 1-1h4.49a1 1 0 0 1 1 1c0 1.24.2 2.44.57 3.54a1 1 0 0 1-.24 1.01l-2.2 2.24z"/></svg>
           <span>Phone</span>
+        </a>
+        <a class="social-icon" href="https://web.wechat.com/" target="_blank" rel="noreferrer" aria-label="WeChat ID MRSEP2025">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.6 4C5.4 4 2 6.8 2 10.3c0 2 1.1 3.8 2.9 5l-.8 2.5 2.8-1.4c.9.2 1.8.4 2.7.4 4.2 0 7.6-2.8 7.6-6.3S13.8 4 9.6 4zm-2.3 7.2a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4.7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM16 9.2c-3.3 0-6 2.2-6 4.9S12.7 19 16 19c.7 0 1.4-.1 2-.3l2.2 1.1-.6-1.9c1.1-.9 1.8-2.2 1.8-3.7 0-2.7-2.7-5-6-5zm-1.8 6a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6zm3.6 0a.8.8 0 1 1 0-1.6.8.8 0 0 1 0 1.6z"/></svg>
+          <span>WeChat</span>
+        </a>
+        <a class="social-icon" href="https://line.me/R/ti/p/~seephralamouti" target="_blank" rel="noreferrer" aria-label="LINE ID seephralamouti">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.7 2 11.2c0 4 3.6 7.3 8.3 7.9l-.3 2.3c0 .2.2.4.4.3l2.9-2.1h.7c4.4 0 8-3.2 8-7.2C22 6.9 17.5 3 12 3zm-3 9.5h-2v-3h1v2h1v1zm2.7 0h-1v-3h1v3zm3.4 0h-2.2v-3h1v2h1.2v1zm2.9-2h-1.1v.5h1v1h-1V13h-1v-3h2.1v1z"/></svg>
+          <span>LINE</span>
         </a>
       </div>
     </div>
