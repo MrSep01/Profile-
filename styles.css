@@ -597,6 +597,54 @@ section {
   font-weight: 700;
 }
 
+.leadership-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.72rem;
+}
+
+.leadership-tile {
+  border-color: #d6e0eb;
+  background: #ffffff;
+}
+
+.leadership-tile-curriculum {
+  background: #f8fbff;
+  border-color: #d4deea;
+}
+
+.leadership-tile-assessment {
+  background: #f8fcfa;
+  border-color: #d4e3da;
+}
+
+.leadership-tile-lab {
+  background: #fffaf9;
+  border-color: #eadcd6;
+}
+
+.leadership-tile-impact {
+  background: #fff8f8;
+  border-color: #e8d8d8;
+}
+
+.leadership-label {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.045em;
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.leadership-text {
+  margin: 0;
+  color: #454b52;
+  font-size: 1.05rem;
+  line-height: 1.46;
+  font-weight: 500;
+}
+
 .summary-narrative-panel h3,
 .profile-panel h3 {
   margin: 0 0 0.28rem;
@@ -3225,6 +3273,10 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .leadership-tiles {
+    grid-template-columns: 1fr;
+  }
+
   .profile-tile-stage {
     grid-column: auto;
   }
@@ -3242,6 +3294,15 @@ footer {
   .summary-line {
     font-size: 1.06rem;
     line-height: 1.66;
+  }
+
+  .leadership-label {
+    font-size: 0.84rem;
+  }
+
+  .leadership-text {
+    font-size: 0.98rem;
+    line-height: 1.42;
   }
 
   .summary-line-label {
