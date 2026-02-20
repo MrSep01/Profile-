@@ -1366,6 +1366,22 @@ section {
   margin: 0.25rem 0;
 }
 
+.video-embed-slot.video-embed-live {
+  padding: 0;
+  min-height: 0;
+  border-style: solid;
+  border-color: rgba(21, 34, 58, 0.12);
+  background: #0b1320;
+  overflow: hidden;
+}
+
+.video-embed-slot.video-embed-live iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
 .reflection-placeholder {
   margin-top: 0.9rem;
   border: 1px solid var(--line);

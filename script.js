@@ -661,7 +661,7 @@ if (
       return true;
     });
 
-    if (headings.length < 3) return;
+    if (headings.length < 1) return;
 
     const usedIds = new Set(
       Array.from(document.querySelectorAll("[id]"))
@@ -728,10 +728,9 @@ if (
 
     if (detailRail) {
       detailRail.appendChild(toc);
-      return;
+    } else {
+      firstPanel.appendChild(toc);
     }
-
-    firstPanel.appendChild(toc);
 
     const tocLinks = Array.from(toc.querySelectorAll(".toc-item a")).filter(
       (link) => link instanceof HTMLAnchorElement
