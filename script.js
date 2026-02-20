@@ -113,6 +113,57 @@ if (contactForm) {
   });
 }
 
+const xProfileUrl = "https://x.com/MrSepAcademics";
+const xIconMarkup =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2H21l-6.6 7.54L22.2 22h-6.1l-4.78-6.28L5.8 22H3l7.08-8.1L2 2h6.26l4.32 5.71L18.24 2zm-.98 18h1.55L7.42 3.9H5.76L17.26 20z"/></svg>';
+
+const ensureXContactLink = () => {
+  const contactLinks = document.querySelectorAll(".contact-links");
+  contactLinks.forEach((links) => {
+    if (links.querySelector(`a[href="${xProfileUrl}"]`)) return;
+
+    const xLink = document.createElement("a");
+    xLink.className = "contact-icon-link";
+    xLink.href = xProfileUrl;
+    xLink.target = "_blank";
+    xLink.rel = "noreferrer";
+    xLink.setAttribute("aria-label", "X profile");
+    xLink.innerHTML = `${xIconMarkup}<span class="sr-only">X</span>`;
+
+    const githubLink = links.querySelector('a[href*="github.com"]');
+    if (githubLink) {
+      links.insertBefore(xLink, githubLink);
+    } else {
+      links.appendChild(xLink);
+    }
+  });
+};
+
+const ensureXFooterLink = () => {
+  const socialLists = document.querySelectorAll(".social-list");
+  socialLists.forEach((list) => {
+    if (list.querySelector(`a[href="${xProfileUrl}"]`)) return;
+
+    const xLink = document.createElement("a");
+    xLink.className = "social-icon";
+    xLink.href = xProfileUrl;
+    xLink.target = "_blank";
+    xLink.rel = "noreferrer";
+    xLink.setAttribute("aria-label", "X profile");
+    xLink.innerHTML = `${xIconMarkup}<span>X</span>`;
+
+    const githubLink = list.querySelector('a[href*="github.com"]');
+    if (githubLink) {
+      list.insertBefore(xLink, githubLink);
+    } else {
+      list.appendChild(xLink);
+    }
+  });
+};
+
+ensureXContactLink();
+ensureXFooterLink();
+
 const sliders = document.querySelectorAll("[data-slider]");
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -344,7 +395,8 @@ const shouldEnableEngagement = () => {
     filename === "blog.html" ||
     filename === "portfolio.html" ||
     filename === "teaching-activities.html" ||
-    filename === "teaching-journey-scavenger-hunt.html"
+    filename === "teaching-journey-scavenger-hunt.html" ||
+    filename === "scavenger-get-social.html"
   ) {
     return false;
   }
